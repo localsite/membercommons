@@ -106,6 +106,34 @@
             pointer-events: none;
         }
 
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: var(--radius-md);
+            transition: var(--transition-smooth);
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .sidebar.collapsed .sidebar-toggle {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar.collapsed .sidebar-toggle i {
+            transform: rotate(180deg);
+        }
+
         .nav-menu {
             flex: 1;
             padding: 16px 0;
@@ -114,6 +142,12 @@
 
         .nav-section {
             margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 16px;
+        }
+
+        .nav-section:last-child {
+            border-bottom: none;
         }
 
         .nav-item {
@@ -142,9 +176,8 @@
         }
 
         .nav-link.active {
-            background: var(--bg-tertiary);
             color: var(--accent-green);
-            border-right: 2px solid var(--accent-green);
+            font-weight: 600;
         }
 
         .nav-icon {
@@ -182,7 +215,7 @@
         }
 
         .subnav {
-            background: var(--bg-tertiary);
+            background: transparent;
             max-height: 0;
             overflow: hidden;
             transition: var(--transition-smooth);
@@ -203,13 +236,12 @@
         }
 
         .subnav-link:hover {
-            background: var(--bg-secondary);
             color: var(--text-primary);
         }
 
         .subnav-link.active {
             color: var(--accent-green);
-            background: var(--bg-secondary);
+            font-weight: 600;
         }
 
         .subnav-icon {
@@ -587,6 +619,76 @@
             opacity: 1;
         }
 
+        /* Subnav icons in collapsed state */
+        .sidebar.collapsed .subnav.expanded {
+            display: flex;
+            flex-direction: column;
+            max-height: none;
+            background: transparent;
+            padding: 0;
+            margin-left: 0;
+        }
+
+        .sidebar.collapsed .subnav.expanded .subnav-link {
+            padding: 8px 20px;
+            background: transparent;
+            margin-bottom: 2px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .subnav.expanded .subnav-link span {
+            display: none;
+        }
+
+        .sidebar.collapsed .subnav.expanded .subnav-icon {
+            margin-right: 0;
+        }
+
+        /* Expanded state - restore normal layout */
+        .sidebar:not(.collapsed) .subnav.expanded .subnav-link,
+        .sidebar.collapsed.hovered .subnav.expanded .subnav-link {
+            justify-content: flex-start !important;
+            padding: 10px 20px 10px 52px !important;
+            background: transparent !important;
+            margin-bottom: 0 !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .sidebar:not(.collapsed) .subnav.expanded .subnav-link span,
+        .sidebar.collapsed.hovered .subnav.expanded .subnav-link span {
+            display: inline !important;
+        }
+
+        .sidebar:not(.collapsed) .subnav.expanded .subnav-icon,
+        .sidebar.collapsed.hovered .subnav.expanded .subnav-icon {
+            margin-right: 12px !important;
+        }
+
+        /* Fix subnav container for hovered state */
+        .sidebar.collapsed.hovered .subnav.expanded {
+            display: block !important;
+            flex-direction: column !important;
+            max-height: 300px !important;
+            background: transparent !important;
+            padding: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Show nav text on hover when collapsed */
+        .sidebar.collapsed.hovered .nav-text {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar.collapsed.hovered .nav-arrow {
+            opacity: 1;
+        }
+
         .loading-spinner {
             display: inline-block;
             width: 16px;
@@ -609,6 +711,9 @@
             <div class="sidebar-header">
                 <div class="logo">MC</div>
                 <span class="logo-text">MemberCommons</span>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i data-feather="chevrons-left"></i>
+                </button>
             </div>
             
             <div class="nav-menu">
@@ -623,15 +728,15 @@
                         <div class="subnav">
                             <a href="#welcome" class="subnav-link active" data-tab="welcome">
                                 <i class="subnav-icon" data-feather="smile"></i>
-                                Welcome
+                                <span>Welcome</span>
                             </a>
                             <a href="#documentation" class="subnav-link" data-tab="documentation">
                                 <i class="subnav-icon" data-feather="book"></i>
-                                Documentation
+                                <span>Documentation</span>
                             </a>
                             <a href="#dashboard" class="subnav-link" data-tab="dashboard">
                                 <i class="subnav-icon" data-feather="bar-chart-2"></i>
-                                Dashboard
+                                <span>Dashboard</span>
                             </a>
                         </div>
                     </div>
@@ -648,15 +753,15 @@
                         <div class="subnav">
                             <a href="#opportunities" class="subnav-link" data-tab="opportunities">
                                 <i class="subnav-icon" data-feather="target"></i>
-                                Opportunities
+                                <span>Opportunities</span>
                             </a>
                             <a href="#assigned-tasks" class="subnav-link" data-tab="assigned-tasks">
                                 <i class="subnav-icon" data-feather="check-square"></i>
-                                Assigned Tasks
+                                <span>Assigned Tasks</span>
                             </a>
                             <a href="#timelines" class="subnav-link" data-tab="timelines">
                                 <i class="subnav-icon" data-feather="calendar"></i>
-                                Timelines
+                                <span>Timelines</span>
                             </a>
                         </div>
                     </div>
@@ -673,15 +778,15 @@
                         <div class="subnav">
                             <a href="#people" class="subnav-link" data-tab="people">
                                 <i class="subnav-icon" data-feather="user"></i>
-                                People
+                                <span>People</span>
                             </a>
                             <a href="#teams" class="subnav-link" data-tab="teams">
                                 <i class="subnav-icon" data-feather="users"></i>
-                                Teams
+                                <span>Teams</span>
                             </a>
                             <a href="#organizations" class="subnav-link" data-tab="organizations">
                                 <i class="subnav-icon" data-feather="grid"></i>
-                                Organizations
+                                <span>Organizations</span>
                             </a>
                         </div>
                     </div>
@@ -698,15 +803,15 @@
                         <div class="subnav">
                             <a href="#preferences" class="subnav-link" data-tab="preferences">
                                 <i class="subnav-icon" data-feather="sliders"></i>
-                                Preferences
+                                <span>Preferences</span>
                             </a>
                             <a href="#skills" class="subnav-link" data-tab="skills">
                                 <i class="subnav-icon" data-feather="award"></i>
-                                Skills
+                                <span>Skills</span>
                             </a>
                             <a href="#interests" class="subnav-link" data-tab="interests">
                                 <i class="subnav-icon" data-feather="heart"></i>
-                                Interests
+                                <span>Interests</span>
                             </a>
                         </div>
                     </div>
@@ -739,7 +844,7 @@
                     <div class="tab-content active" id="welcome-tab">
                         <div class="welcome-hero">
                             <h1 class="hero-title">Welcome to DemocracyLab 2.0!</h1>
-                            <p class="hero-subtitle">The AI<!--ultimate--> collaboration platform for technical teams working on local innovation projects</p>
+                            <p class="hero-subtitle">The AI<!--ultimate--> collaboration platform for technical teams working on open innovation projects</p>
                             <button class="btn btn-secondary" onclick="showAuthModal()">Get Started</button>
                         </div>
 
@@ -1138,7 +1243,7 @@
                                     Create Team
                                 </button>
                             </div>
-                            <p style="color: var(--text-secondary); margin-bottom: 24px;">Collaborate with small, focused development teams working on local innovation projects.</p>
+                            <p style="color: var(--text-secondary); margin-bottom: 24px;">Collaborate with small, focused development teams working on open innovation projects.</p>
                             
                             <div class="teams-grid">
                                 <div class="team-card">
@@ -1868,37 +1973,283 @@
             currentSection: 'home',
             currentTab: 'welcome',
             isAuthenticated: false,
-            sidebarCollapsed: false
+            sidebarCollapsed: false,
+            urlParams: new URLSearchParams()
         };
 
-        // Navigation Functions
-        function initializeNavigation() {
-            // Handle main navigation clicks
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function() {
-                    const section = this.getAttribute('data-section');
-                    switchSection(section);
-                    
-                    // Toggle subnav
-                    const subnav = this.nextElementSibling;
-                    const arrow = this.querySelector('.nav-arrow');
-                    
-                    if (subnav && subnav.classList.contains('subnav')) {
-                        const isExpanded = subnav.classList.contains('expanded');
-                        
-                        // Close all other subnavs
-                        document.querySelectorAll('.subnav').forEach(nav => nav.classList.remove('expanded'));
-                        document.querySelectorAll('.nav-arrow').forEach(arr => arr.classList.remove('expanded'));
-                        
-                        if (!isExpanded) {
+        // HashRouter Implementation
+        class HashRouter {
+            constructor() {
+                this.routes = {
+                    'home': { section: 'home', tabs: ['welcome', 'documentation', 'dashboard'] },
+                    'projects': { section: 'projects', tabs: ['opportunities', 'assigned-tasks', 'timelines'] },
+                    'people': { section: 'people', tabs: ['people', 'teams', 'organizations'] },
+                    'account': { section: 'account', tabs: ['preferences', 'skills', 'interests'] }
+                };
+                
+                this.init();
+            }
+
+            init() {
+                window.addEventListener('hashchange', () => this.handleHashChange());
+                window.addEventListener('load', () => this.handleHashChange());
+            }
+
+            // Parse hash and return route information
+            parseHash() {
+                const hash = window.location.hash.slice(1); // Remove #
+                if (!hash) return { section: 'home', tab: 'welcome', params: new URLSearchParams() };
+
+                let [path, queryString] = hash.split('?');
+                const params = new URLSearchParams(queryString || '');
+                
+                let [section, tab] = path.split('/');
+                
+                // Validate section
+                if (!this.routes[section]) {
+                    section = 'home';
+                }
+                
+                // Validate tab for section
+                const validTabs = this.routes[section].tabs;
+                if (!tab || !validTabs.includes(tab)) {
+                    tab = validTabs[0];
+                }
+
+                return { section, tab, params };
+            }
+
+            // Handle hash changes
+            handleHashChange() {
+                const route = this.parseHash();
+                
+                // Update application state
+                AppState.currentSection = route.section;
+                AppState.currentTab = route.tab;
+                AppState.urlParams = route.params;
+                
+                // Update UI
+                this.updateUI(route);
+                
+                // Handle special parameters
+                this.handleSpecialParams(route.params);
+            }
+
+            // Update UI based on route
+            updateUI(route) {
+                // Switch section
+                switchSection(route.section);
+                
+                // Switch tab
+                switchTab(route.tab);
+                
+                // Update navigation active states
+                this.updateNavigationState(route.section, route.tab);
+            }
+
+            // Update navigation active states
+            updateNavigationState(section, tab) {
+                // Update main navigation
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.section === section) {
+                        // Expand subnav for active section
+                        const subnav = link.nextElementSibling;
+                        const arrow = link.querySelector('.nav-arrow');
+                        if (subnav && subnav.classList.contains('subnav')) {
                             subnav.classList.add('expanded');
                             arrow.classList.add('expanded');
                         }
                     }
+                });
+
+                // Update subnav
+                document.querySelectorAll('.subnav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.tab === tab) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Only make nav title active if no subnav item is active
+                const hasActiveSubnav = document.querySelector('.subnav-link.active');
+                if (!hasActiveSubnav) {
+                    const currentNavLink = document.querySelector(`.nav-link[data-section="${section}"]`);
+                    if (currentNavLink) {
+                        currentNavLink.classList.add('active');
+                    }
+                }
+
+                // Update tabs
+                const currentSection = document.querySelector('.section.active');
+                if (currentSection) {
+                    currentSection.querySelectorAll('.tab').forEach(tabEl => {
+                        tabEl.classList.remove('active');
+                        if (tabEl.dataset.tab === tab) {
+                            tabEl.classList.add('active');
+                        }
+                    });
+                }
+            }
+
+            // Handle special URL parameters
+            handleSpecialParams(params) {
+                // Handle city parameter
+                const city = params.get('city');
+                if (city) {
+                    this.applyCityFilter(city);
+                }
+
+                // Handle search parameter
+                const search = params.get('search');
+                if (search) {
+                    this.applySearchFilter(search);
+                }
+
+                // Handle project filter
+                const projectFilter = params.get('filter');
+                if (projectFilter) {
+                    this.applyProjectFilter(projectFilter);
+                }
+            }
+
+            // Apply city filter
+            applyCityFilter(city) {
+                const cityFilters = document.querySelectorAll('select option[value*="' + city.toLowerCase() + '"]');
+                cityFilters.forEach(option => {
+                    option.selected = true;
+                    option.parentElement.dispatchEvent(new Event('change'));
+                });
+            }
+
+            // Apply search filter
+            applySearchFilter(search) {
+                const searchInputs = document.querySelectorAll('input[type="text"][placeholder*="search" i]');
+                searchInputs.forEach(input => {
+                    input.value = search;
+                    input.dispatchEvent(new Event('input'));
+                });
+            }
+
+            // Apply project filter
+            applyProjectFilter(filter) {
+                const filterSelects = document.querySelectorAll('select[name="project-filter"]');
+                filterSelects.forEach(select => {
+                    const option = select.querySelector(`option[value="${filter}"]`);
+                    if (option) {
+                        option.selected = true;
+                        select.dispatchEvent(new Event('change'));
+                    }
+                });
+            }
+
+            // Navigate to a specific route
+            navigate(section, tab = null, params = {}) {
+                if (!this.routes[section]) return;
+                
+                const validTabs = this.routes[section].tabs;
+                if (!tab || !validTabs.includes(tab)) {
+                    tab = validTabs[0];
+                }
+
+                // Preserve existing params and merge with new ones
+                const currentParams = new URLSearchParams(AppState.urlParams);
+                Object.entries(params).forEach(([key, value]) => {
+                    if (value) {
+                        currentParams.set(key, value);
+                    } else {
+                        currentParams.delete(key);
+                    }
+                });
+
+                const queryString = currentParams.toString();
+                const hash = `#${section}/${tab}${queryString ? '?' + queryString : ''}`;
+                
+                window.location.hash = hash;
+            }
+
+            // Get current URL parameters
+            getParams() {
+                return Object.fromEntries(AppState.urlParams.entries());
+            }
+
+            // Set URL parameter
+            setParam(key, value) {
+                const params = this.getParams();
+                params[key] = value;
+                this.navigate(AppState.currentSection, AppState.currentTab, params);
+            }
+
+            // Remove URL parameter
+            removeParam(key) {
+                const params = this.getParams();
+                delete params[key];
+                this.navigate(AppState.currentSection, AppState.currentTab, params);
+            }
+        }
+
+        // Navigation Functions
+        function initializeNavigation() {
+            // Handle sidebar toggle
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            // Sidebar hover state variables
+            let hoverTimeout;
+            let isHoverExpanded = false;
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    AppState.sidebarCollapsed = sidebar.classList.contains('collapsed');
                     
-                    // Update active states
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
+                    // Clear hover state when toggling
+                    clearTimeout(hoverTimeout);
+                    sidebar.classList.remove('hovered');
+                    isHoverExpanded = false;
+                    
+                    // Reset width to CSS values
+                    sidebar.style.width = '';
+                    
+                    // Update toggle icon
+                    const icon = this.querySelector('i');
+                    if (sidebar.classList.contains('collapsed')) {
+                        icon.setAttribute('data-feather', 'chevrons-right');
+                    } else {
+                        icon.setAttribute('data-feather', 'chevrons-left');
+                    }
+                    feather.replace();
+                });
+            }
+
+            // Handle main navigation clicks
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    if (section) {
+                        // Toggle subnav for clicked section (don't close others)
+                        const subnav = this.nextElementSibling;
+                        const arrow = this.querySelector('.nav-arrow');
+                        
+                        if (subnav && subnav.classList.contains('subnav')) {
+                            const isCurrentlyExpanded = subnav.classList.contains('expanded');
+                            
+                            if (isCurrentlyExpanded) {
+                                // If clicking the already active section, toggle it
+                                if (this.classList.contains('active')) {
+                                    subnav.classList.remove('expanded');
+                                    arrow.classList.remove('expanded');
+                                    return; // Don't navigate if we're just closing
+                                }
+                            } else {
+                                // Expand this subnav
+                                subnav.classList.add('expanded');
+                                arrow.classList.add('expanded');
+                            }
+                        }
+                        
+                        router.navigate(section);
+                    }
                 });
             });
 
@@ -1907,12 +2258,9 @@
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const tab = this.getAttribute('data-tab');
-                    switchTab(tab);
-                    
-                    // Update active states
-                    const parentSubnav = this.closest('.subnav');
-                    parentSubnav.querySelectorAll('.subnav-link').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
+                    if (tab) {
+                        router.navigate(AppState.currentSection, tab);
+                    }
                 });
             });
 
@@ -1920,31 +2268,44 @@
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-tab');
-                    switchTab(tabName);
-                    
-                    // Update active states
-                    const tabContainer = this.closest('.tabs');
-                    tabContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
+                    if (tabName) {
+                        router.navigate(AppState.currentSection, tabName);
+                    }
                 });
             });
 
             // Sidebar hover functionality for collapsed state
-            const sidebar = document.getElementById('sidebar');
-            let hoverTimeout;
             
             sidebar.addEventListener('mouseenter', function() {
                 if (this.classList.contains('collapsed')) {
                     clearTimeout(hoverTimeout);
+                    this.classList.add('hovered');
                     this.style.width = 'var(--sidebar-width)';
+                    isHoverExpanded = true;
+                    
+                    // Show the toggle button on hover
+                    const toggleBtn = this.querySelector('.sidebar-toggle');
+                    if (toggleBtn) {
+                        toggleBtn.style.opacity = '1';
+                        toggleBtn.style.pointerEvents = 'auto';
+                    }
                 }
             });
             
             sidebar.addEventListener('mouseleave', function() {
-                if (this.classList.contains('collapsed')) {
+                if (this.classList.contains('collapsed') && isHoverExpanded) {
                     hoverTimeout = setTimeout(() => {
+                        this.classList.remove('hovered');
                         this.style.width = 'var(--sidebar-collapsed)';
-                    }, 500);
+                        isHoverExpanded = false;
+                        
+                        // Hide the toggle button again
+                        const toggleBtn = this.querySelector('.sidebar-toggle');
+                        if (toggleBtn) {
+                            toggleBtn.style.opacity = '0';
+                            toggleBtn.style.pointerEvents = 'none';
+                        }
+                    }, 1000);
                 }
             });
         }
@@ -2125,6 +2486,9 @@
             }
         }
 
+        // Initialize HashRouter
+        const router = new HashRouter();
+
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             initializeNavigation();
@@ -2145,6 +2509,9 @@
                 skillsManager.init();
             }
             
+            // Setup filter change handlers to update URL
+            setupFilterHandlers();
+            
             // Close modal when clicking outside
             document.getElementById('auth-modal').addEventListener('click', function(e) {
                 if (e.target === this) {
@@ -2152,6 +2519,49 @@
                 }
             });
         });
+
+        // Setup handlers for filters to update URL parameters
+        function setupFilterHandlers() {
+            // Project filters
+            document.addEventListener('change', function(e) {
+                if (e.target.matches('select[name="project-filter"]')) {
+                    const filterValue = e.target.value;
+                    if (filterValue) {
+                        router.setParam('filter', filterValue);
+                    } else {
+                        router.removeParam('filter');
+                    }
+                }
+            });
+
+            // Location filters
+            document.addEventListener('change', function(e) {
+                if (e.target.matches('select') && e.target.querySelector('option[value*="atlanta"], option[value*="portland"], option[value*="detroit"]')) {
+                    const cityValue = e.target.value;
+                    if (cityValue) {
+                        router.setParam('city', cityValue);
+                    } else {
+                        router.removeParam('city');
+                    }
+                }
+            });
+
+            // Search inputs
+            let searchTimeout;
+            document.addEventListener('input', function(e) {
+                if (e.target.matches('input[type="text"][placeholder*="search" i]')) {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        const searchValue = e.target.value.trim();
+                        if (searchValue) {
+                            router.setParam('search', searchValue);
+                        } else {
+                            router.removeParam('search');
+                        }
+                    }, 500); // Debounce search updates
+                }
+            });
+        }
 
         // Handle window resize for responsive design
         window.addEventListener('resize', function() {
