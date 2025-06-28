@@ -1026,6 +1026,9 @@
     <!-- Load Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     
+    <!-- Load Projects Module -->
+    <script src="js/projects.js"></script>
+    
     <script>
         // Initialize Feather Icons
         feather.replace();
@@ -1300,6 +1303,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeNavigation();
             loadInitialData();
+            
+            // Initialize projects manager
+            if (typeof projectsManager !== 'undefined') {
+                projectsManager.init();
+            }
             
             // Close modal when clicking outside
             document.getElementById('auth-modal').addEventListener('click', function(e) {
