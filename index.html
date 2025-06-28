@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.css">
     <link rel="stylesheet" href="css/projects.css">
     <link rel="stylesheet" href="css/people-teams.css">
+    <link rel="stylesheet" href="css/account.css">
     <style>
         :root {
             --bg-primary: #F9FAFB;
@@ -1363,6 +1364,7 @@
                     </div>
                 </div>
 
+                <!-- My Account Section -->
                 <div class="section" id="account-section">
                     <div class="tabs">
                         <button class="tab active" data-tab="preferences">Preferences</button>
@@ -1370,13 +1372,424 @@
                         <button class="tab" data-tab="interests">Interests</button>
                     </div>
                     
+                    <!-- Preferences Tab -->
                     <div class="tab-content active" id="preferences-tab">
                         <div class="card">
-                            <h2 class="card-title">Policy Preferences</h2>
-                            <p style="color: var(--text-secondary); margin-bottom: 24px;">Help us match you with projects that align with your policy interests and values.</p>
+                            <div class="card-header">
+                                <h2 class="card-title">Policy Preferences Survey</h2>
+                                <div class="survey-progress">
+                                    <span class="progress-text">0 of 20 completed</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-bottom: 24px;">Rate your agreement with these policy positions to help us match you with aligned projects and collaborators.</p>
                             
-                            <div style="background: var(--bg-tertiary); padding: 20px; border-radius: var(--radius-md);">
-                                <p style="text-align: center; color: var(--text-secondary);">Policy preference survey will be loaded here</p>
+                            <div class="survey-container">
+                                <div class="survey-question active" data-question="1">
+                                    <h3 class="question-title">Government should prioritize investments in renewable energy infrastructure</h3>
+                                    <div class="rating-scale">
+                                        <button class="rating-btn" data-value="1">
+                                            <span class="rating-number">1</span>
+                                            <span class="rating-label">Strongly Disagree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="2">
+                                            <span class="rating-number">2</span>
+                                            <span class="rating-label">Disagree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="3">
+                                            <span class="rating-number">3</span>
+                                            <span class="rating-label">No Opinion</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="4">
+                                            <span class="rating-number">4</span>
+                                            <span class="rating-label">Agree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="5">
+                                            <span class="rating-number">5</span>
+                                            <span class="rating-label">Strongly Agree</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="survey-question" data-question="2">
+                                    <h3 class="question-title">Public funding should support AI research for government efficiency</h3>
+                                    <div class="rating-scale">
+                                        <button class="rating-btn" data-value="1">
+                                            <span class="rating-number">1</span>
+                                            <span class="rating-label">Strongly Disagree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="2">
+                                            <span class="rating-number">2</span>
+                                            <span class="rating-label">Disagree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="3">
+                                            <span class="rating-number">3</span>
+                                            <span class="rating-label">No Opinion</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="4">
+                                            <span class="rating-number">4</span>
+                                            <span class="rating-label">Agree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="5">
+                                            <span class="rating-number">5</span>
+                                            <span class="rating-label">Strongly Agree</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="survey-question" data-question="3">
+                                    <h3 class="question-title">Digital privacy rights should be strengthened with new legislation</h3>
+                                    <div class="rating-scale">
+                                        <button class="rating-btn" data-value="1">
+                                            <span class="rating-number">1</span>
+                                            <span class="rating-label">Strongly Disagree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="2">
+                                            <span class="rating-number">2</span>
+                                            <span class="rating-label">Disagree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="3">
+                                            <span class="rating-number">3</span>
+                                            <span class="rating-label">No Opinion</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="4">
+                                            <span class="rating-number">4</span>
+                                            <span class="rating-label">Agree</span>
+                                        </button>
+                                        <button class="rating-btn" data-value="5">
+                                            <span class="rating-number">5</span>
+                                            <span class="rating-label">Strongly Agree</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Additional survey questions will be loaded dynamically -->
+                            </div>
+
+                            <div class="survey-navigation">
+                                <button class="btn btn-secondary" id="prev-question" disabled>Previous</button>
+                                <button class="btn btn-primary" id="next-question">Next Question</button>
+                                <button class="btn btn-primary" id="finish-survey" style="display: none;">Complete Survey</button>
+                            </div>
+
+                            <div class="survey-results" style="display: none;">
+                                <h3>Your Policy Profile</h3>
+                                <div class="sankey-chart-container">
+                                    <canvas id="sankey-chart" width="600" height="300"></canvas>
+                                </div>
+                                <div class="profile-summary">
+                                    <div class="profile-category">
+                                        <h4>Technology & Innovation</h4>
+                                        <div class="category-score">Strong Support (4.2/5)</div>
+                                        <div class="category-description">You strongly support government investment in technology and innovation initiatives.</div>
+                                    </div>
+                                    <div class="profile-category">
+                                        <h4>Environmental Policy</h4>
+                                        <div class="category-score">Strong Support (4.8/5)</div>
+                                        <div class="category-description">You are highly aligned with environmental protection and renewable energy policies.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Tab -->
+                    <div class="tab-content" id="skills-tab">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Technical Skills & Expertise</h2>
+                                <button class="btn btn-primary">
+                                    <i data-feather="plus"></i>
+                                    Add Skill
+                                </button>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-bottom: 24px;">Showcase your technical skills to attract relevant project opportunities and collaborators.</p>
+                            
+                            <div class="skills-section">
+                                <div class="skill-category">
+                                    <h3 class="category-title">Programming Languages</h3>
+                                    <div class="skills-grid">
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <span class="skill-name">JavaScript</span>
+                                                <span class="skill-level expert">Expert</span>
+                                            </div>
+                                            <div class="skill-bar">
+                                                <div class="skill-progress" style="width: 90%"></div>
+                                            </div>
+                                            <div class="skill-experience">5+ years • React, Node.js, TypeScript</div>
+                                        </div>
+
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <span class="skill-name">Python</span>
+                                                <span class="skill-level advanced">Advanced</span>
+                                            </div>
+                                            <div class="skill-bar">
+                                                <div class="skill-progress" style="width: 80%"></div>
+                                            </div>
+                                            <div class="skill-experience">3+ years • Django, FastAPI, Data Science</div>
+                                        </div>
+
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <span class="skill-name">Rust</span>
+                                                <span class="skill-level intermediate">Intermediate</span>
+                                            </div>
+                                            <div class="skill-bar">
+                                                <div class="skill-progress" style="width: 60%"></div>
+                                            </div>
+                                            <div class="skill-experience">1+ year • Actix-web, SQLx</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-category">
+                                    <h3 class="category-title">Frameworks & Libraries</h3>
+                                    <div class="skills-grid">
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <span class="skill-name">React</span>
+                                                <span class="skill-level expert">Expert</span>
+                                            </div>
+                                            <div class="skill-bar">
+                                                <div class="skill-progress" style="width: 95%"></div>
+                                            </div>
+                                            <div class="skill-experience">4+ years • Hooks, Context, Redux</div>
+                                        </div>
+
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <span class="skill-name">Node.js</span>
+                                                <span class="skill-level advanced">Advanced</span>
+                                            </div>
+                                            <div class="skill-bar">
+                                                <div class="skill-progress" style="width: 85%"></div>
+                                            </div>
+                                            <div class="skill-experience">3+ years • Express, NestJS, APIs</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-category">
+                                    <h3 class="category-title">Cloud & DevOps</h3>
+                                    <div class="skills-grid">
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <span class="skill-name">AWS</span>
+                                                <span class="skill-level advanced">Advanced</span>
+                                            </div>
+                                            <div class="skill-bar">
+                                                <div class="skill-progress" style="width: 75%"></div>
+                                            </div>
+                                            <div class="skill-experience">2+ years • EC2, Lambda, RDS, S3</div>
+                                        </div>
+
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <span class="skill-name">Docker</span>
+                                                <span class="skill-level advanced">Advanced</span>
+                                            </div>
+                                            <div class="skill-bar">
+                                                <div class="skill-progress" style="width: 80%"></div>
+                                            </div>
+                                            <div class="skill-experience">3+ years • Containerization, Compose</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-category">
+                                    <h3 class="category-title">Certifications & Achievements</h3>
+                                    <div class="certifications-grid">
+                                        <div class="certification-item">
+                                            <div class="cert-icon">
+                                                <i data-feather="award"></i>
+                                            </div>
+                                            <div class="cert-info">
+                                                <h4 class="cert-name">AWS Certified Developer</h4>
+                                                <p class="cert-issuer">Amazon Web Services</p>
+                                                <p class="cert-date">Issued: Jan 2024</p>
+                                            </div>
+                                            <div class="cert-badge verified">
+                                                <i data-feather="check-circle"></i>
+                                                Verified
+                                            </div>
+                                        </div>
+
+                                        <div class="certification-item">
+                                            <div class="cert-icon">
+                                                <i data-feather="award"></i>
+                                            </div>
+                                            <div class="cert-info">
+                                                <h4 class="cert-name">Google AI/ML Certificate</h4>
+                                                <p class="cert-issuer">Google Cloud</p>
+                                                <p class="cert-date">Issued: Nov 2023</p>
+                                            </div>
+                                            <div class="cert-badge verified">
+                                                <i data-feather="check-circle"></i>
+                                                Verified
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interests Tab -->
+                    <div class="tab-content" id="interests-tab">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Interest Areas</h2>
+                                <div class="interests-summary">
+                                    <span class="summary-text">8 of 20 interests rated</span>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-bottom: 24px;">Rate your interest level in different project focus areas to receive personalized project recommendations.</p>
+                            
+                            <div class="interests-grid">
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="cpu"></i>
+                                        </div>
+                                        <h3 class="interest-name">Technology Innovation</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="technology">
+                                        <button class="star-btn active" data-rating="1">★</button>
+                                        <button class="star-btn active" data-rating="2">★</button>
+                                        <button class="star-btn active" data-rating="3">★</button>
+                                        <button class="star-btn active" data-rating="4">★</button>
+                                        <button class="star-btn active" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">AI, machine learning, emerging technologies</p>
+                                </div>
+
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="leaf"></i>
+                                        </div>
+                                        <h3 class="interest-name">Environmental Sustainability</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="environment">
+                                        <button class="star-btn active" data-rating="1">★</button>
+                                        <button class="star-btn active" data-rating="2">★</button>
+                                        <button class="star-btn active" data-rating="3">★</button>
+                                        <button class="star-btn active" data-rating="4">★</button>
+                                        <button class="star-btn" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">Climate solutions, renewable energy, green tech</p>
+                                </div>
+
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="book"></i>
+                                        </div>
+                                        <h3 class="interest-name">Education</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="education">
+                                        <button class="star-btn active" data-rating="1">★</button>
+                                        <button class="star-btn active" data-rating="2">★</button>
+                                        <button class="star-btn active" data-rating="3">★</button>
+                                        <button class="star-btn" data-rating="4">★</button>
+                                        <button class="star-btn" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">Digital literacy, educational technology</p>
+                                </div>
+
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="heart"></i>
+                                        </div>
+                                        <h3 class="interest-name">Healthcare Access</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="healthcare">
+                                        <button class="star-btn active" data-rating="1">★</button>
+                                        <button class="star-btn active" data-rating="2">★</button>
+                                        <button class="star-btn active" data-rating="3">★</button>
+                                        <button class="star-btn active" data-rating="4">★</button>
+                                        <button class="star-btn active" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">Health tech, medical access, public health</p>
+                                </div>
+
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="trending-up"></i>
+                                        </div>
+                                        <h3 class="interest-name">Economic Growth</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="economic">
+                                        <button class="star-btn active" data-rating="1">★</button>
+                                        <button class="star-btn active" data-rating="2">★</button>
+                                        <button class="star-btn active" data-rating="3">★</button>
+                                        <button class="star-btn" data-rating="4">★</button>
+                                        <button class="star-btn" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">Small business, entrepreneurship, innovation</p>
+                                </div>
+
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="shield"></i>
+                                        </div>
+                                        <h3 class="interest-name">Governance & Transparency</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="governance">
+                                        <button class="star-btn active" data-rating="1">★</button>
+                                        <button class="star-btn active" data-rating="2">★</button>
+                                        <button class="star-btn active" data-rating="3">★</button>
+                                        <button class="star-btn active" data-rating="4">★</button>
+                                        <button class="star-btn" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">Open government, accountability, civic tech</p>
+                                </div>
+
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="droplet"></i>
+                                        </div>
+                                        <h3 class="interest-name">Water & Sanitation</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="water">
+                                        <button class="star-btn" data-rating="1">★</button>
+                                        <button class="star-btn" data-rating="2">★</button>
+                                        <button class="star-btn" data-rating="3">★</button>
+                                        <button class="star-btn" data-rating="4">★</button>
+                                        <button class="star-btn" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">Clean water access, infrastructure, quality</p>
+                                </div>
+
+                                <div class="interest-card">
+                                    <div class="interest-header">
+                                        <div class="interest-icon">
+                                            <i data-feather="users"></i>
+                                        </div>
+                                        <h3 class="interest-name">Social Impact</h3>
+                                    </div>
+                                    <div class="star-rating" data-interest="social">
+                                        <button class="star-btn active" data-rating="1">★</button>
+                                        <button class="star-btn active" data-rating="2">★</button>
+                                        <button class="star-btn active" data-rating="3">★</button>
+                                        <button class="star-btn active" data-rating="4">★</button>
+                                        <button class="star-btn active" data-rating="5">★</button>
+                                    </div>
+                                    <p class="interest-description">Community development, social justice</p>
+                                </div>
+                            </div>
+
+                            <div class="interests-actions">
+                                <button class="btn btn-secondary">Load More Interests</button>
+                                <button class="btn btn-primary">Save Preferences</button>
                             </div>
                         </div>
                     </div>
@@ -1437,6 +1850,9 @@
     
     <!-- Load Projects Module -->
     <script src="js/projects.js"></script>
+    
+    <!-- Load Survey Module -->
+    <script src="js/survey.js"></script>
     
     <script>
         // Initialize Feather Icons
@@ -1716,6 +2132,16 @@
             // Initialize projects manager
             if (typeof projectsManager !== 'undefined') {
                 projectsManager.init();
+            }
+            
+            // Initialize survey and skills managers
+            if (typeof surveyManager !== 'undefined') {
+                surveyManager.init();
+                surveyManager.loadSavedResponses();
+            }
+            
+            if (typeof skillsManager !== 'undefined') {
+                skillsManager.init();
             }
             
             // Close modal when clicking outside
