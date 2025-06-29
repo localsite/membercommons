@@ -907,6 +907,9 @@
                                 <li><strong>Team Building:</strong> Create and manage teams and organizations</li>
                                 <li><strong>Preference Matching:</strong> AI-powered recommendations based on your interests and policy preferences</li>
                             </ul>
+                            <br>
+
+                            View <a href="sql/admin/">Rust and PostgreSQL setup</a>
                         </div>
                     </div>
 
@@ -2352,7 +2355,32 @@
                     e.preventDefault();
                     const tab = this.getAttribute('data-tab');
                     if (tab) {
-                        router.navigate(AppState.currentSection, tab);
+                        // Find the parent section of this subnav
+                        const parentNavItem = this.closest('.nav-item');
+                        const parentNavLink = parentNavItem?.querySelector('.nav-link[data-section]');
+                        const targetSection = parentNavLink?.getAttribute('data-section');
+                        
+                        if (targetSection) {
+                            // If we're clicking a subnav in a different section, switch to that section first
+                            if (targetSection !== AppState.currentSection) {
+                                // First expand the target section's subnav if it's not already expanded
+                                const targetSubnav = parentNavLink.nextElementSibling;
+                                const targetArrow = parentNavLink.querySelector('.nav-arrow');
+                                if (targetSubnav && !targetSubnav.classList.contains('expanded')) {
+                                    targetSubnav.classList.add('expanded');
+                                    targetArrow?.classList.add('expanded');
+                                }
+                                
+                                // Navigate to the target section and tab
+                                router.navigate(targetSection, tab);
+                            } else {
+                                // Already in the correct section, just switch tab
+                                router.navigate(AppState.currentSection, tab);
+                            }
+                        } else {
+                            // Fallback: use current section
+                            router.navigate(AppState.currentSection, tab);
+                        }
                         
                         // Auto-scroll to section if it exists
                         setTimeout(() => {
