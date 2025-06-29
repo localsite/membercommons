@@ -121,7 +121,7 @@
         }
 
         .sidebar-toggle:hover {
-            background: var(--bg-tertiary);
+            background: none;
             color: var(--text-primary);
         }
 
@@ -170,11 +170,6 @@
             font-weight: 500;
         }
 
-        .nav-link:hover {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-
         .nav-link.active {
             color: var(--accent-green);
             font-weight: 600;
@@ -190,6 +185,23 @@
         .nav-text {
             flex: 1;
             opacity: 1;
+            transition: var(--transition-smooth);
+        }
+
+        .sidebar.collapsed:not(.hovered) .nav-link:hover {
+               background: var(--accent-blue) !important;
+               color: white !important;
+               /*
+               border-radius: var(--radius-md);
+               padding: 8px;
+               margin: -8px;
+               
+               */
+               transition: var(--transition-smooth);
+        }
+        .sidebar.collapsed:not(.hovered) .subnav-link:hover {
+            background: var(--accent-blue) !important;
+            color: white !important;
             transition: var(--transition-smooth);
         }
 
@@ -233,10 +245,6 @@
             text-decoration: none;
             font-size: 13px;
             transition: var(--transition-smooth);
-        }
-
-        .subnav-link:hover {
-            color: var(--text-primary);
         }
 
         .subnav-link.active {
@@ -633,7 +641,6 @@
             padding: 8px 20px;
             background: transparent;
             margin-bottom: 2px;
-            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -687,6 +694,12 @@
 
         .sidebar.collapsed.hovered .nav-arrow {
             opacity: 1;
+        }
+
+        /* Show logo text when collapsed and hovered */
+        .sidebar.collapsed.hovered .logo-text {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .loading-spinner {
@@ -2147,32 +2160,85 @@
             // Handle sidebar toggle
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const sidebar = document.getElementById('sidebar');
+            const logo = document.querySelector('.logo');
             
             // Sidebar hover state variables
             let hoverTimeout;
             let isHoverExpanded = false;
+            let slideRightEnabled = true; // Toggle for slide-right functionality
             
-            if (sidebarToggle && sidebar) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('collapsed');
-                    AppState.sidebarCollapsed = sidebar.classList.contains('collapsed');
-                    
-                    // Clear hover state when toggling
-                    clearTimeout(hoverTimeout);
-                    sidebar.classList.remove('hovered');
-                    isHoverExpanded = false;
-                    
-                    // Reset width to CSS values
-                    sidebar.style.width = '';
+            // Reusable function to toggle sidebar state
+            function toggleSidebar(forceState = null) {
+                const isCurrentlyCollapsed = sidebar.classList.contains('collapsed');
+                
+                // Determine target state
+                let shouldCollapse;
+                if (forceState === 'expand') {
+                    shouldCollapse = false;
+                } else if (forceState === 'collapse') {
+                    shouldCollapse = true;
+                } else {
+                    shouldCollapse = !isCurrentlyCollapsed; // Toggle
+                }
+                
+                // Apply the state change
+                if (shouldCollapse && !isCurrentlyCollapsed) {
+                    // Collapse sidebar
+                    sidebar.classList.add('collapsed');
+                    AppState.sidebarCollapsed = true;
+                } else if (!shouldCollapse && isCurrentlyCollapsed) {
+                    // Expand sidebar
+                    sidebar.classList.remove('collapsed');
+                    AppState.sidebarCollapsed = false;
+                }
+                
+                // Clear hover state when toggling
+                clearTimeout(hoverTimeout);
+                sidebar.classList.remove('hovered');
+                isHoverExpanded = false;
+                sidebar.style.width = '';
+                
+                // Handle toggle button visibility
+                if (sidebarToggle) {
+                    if (sidebar.classList.contains('collapsed')) {
+                        // When collapsed, hide the toggle button
+                        sidebarToggle.style.opacity = '0';
+                        sidebarToggle.style.pointerEvents = 'none';
+                    } else {
+                        // When expanded, show toggle button
+                        sidebarToggle.style.opacity = '1';
+                        sidebarToggle.style.pointerEvents = 'auto';
+                    }
                     
                     // Update toggle icon
-                    const icon = this.querySelector('i');
-                    if (sidebar.classList.contains('collapsed')) {
-                        icon.setAttribute('data-feather', 'chevrons-right');
-                    } else {
-                        icon.setAttribute('data-feather', 'chevrons-left');
+                    const icon = sidebarToggle.querySelector('i');
+                    if (icon) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            icon.setAttribute('data-feather', 'chevrons-right');
+                        } else {
+                            icon.setAttribute('data-feather', 'chevrons-left');
+                        }
+                        feather.replace();
                     }
-                    feather.replace();
+                }
+                
+                return !sidebar.classList.contains('collapsed'); // Return true if expanded
+            }
+            
+            // Setup sidebar toggle button click handler
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    toggleSidebar(); // Use reusable function
+                });
+            }
+
+            // Setup logo click handler to expand when collapsed
+            if (logo && sidebar) {
+                logo.addEventListener('click', function() {
+                    // Only expand if currently collapsed
+                    if (sidebar.classList.contains('collapsed')) {
+                        toggleSidebar('expand'); // Use reusable function
+                    }
                 });
             }
 
@@ -2233,10 +2299,59 @@
                 });
             });
 
+            // Add invisible toggle for slide-right functionality
+            const navMenu = document.querySelector('.nav-menu');
+            if (navMenu) {
+                navMenu.addEventListener('click', function(e) {
+                    // Only toggle if clicking on the nav-menu itself (blank area), not on nav items
+                    if (e.target === this) {
+                        slideRightEnabled = !slideRightEnabled;
+                        
+                        // Update sidebar classes and behavior based on new state
+                        if (!slideRightEnabled) {
+                            // Disable slide-right: sidebar stays narrow, show hover buttons
+                            sidebar.classList.add('slide-right-disabled');
+                            sidebar.classList.remove('hovered');
+                            sidebar.style.width = '';
+                            clearTimeout(hoverTimeout);
+                            isHoverExpanded = false;
+                            
+                            // Hide toggle button when slide-right is disabled
+                            const toggleBtn = sidebar.querySelector('.sidebar-toggle');
+                            if (toggleBtn && sidebar.classList.contains('collapsed')) {
+                                toggleBtn.style.opacity = '0';
+                                toggleBtn.style.pointerEvents = 'none';
+                            }
+                        } else {
+                            // Enable slide-right: remove disabled class and immediately expand
+                            sidebar.classList.remove('slide-right-disabled');
+                            
+                            // If sidebar is collapsed, immediately expand it
+                            if (sidebar.classList.contains('collapsed')) {
+                                clearTimeout(hoverTimeout);
+                                sidebar.classList.add('hovered');
+                                sidebar.style.width = 'var(--sidebar-width)';
+                                isHoverExpanded = true;
+                                
+                                // Show the toggle button
+                                const toggleBtn = sidebar.querySelector('.sidebar-toggle');
+                                if (toggleBtn) {
+                                    toggleBtn.style.opacity = '1';
+                                    toggleBtn.style.pointerEvents = 'auto';
+                                }
+                            }
+                        }
+                        
+                        // Visual feedback (optional)
+                        console.log('Slide-right ' + (slideRightEnabled ? 'enabled' : 'disabled'));
+                    }
+                });
+            }
+
             // Sidebar hover functionality for collapsed state
             
             sidebar.addEventListener('mouseenter', function() {
-                if (this.classList.contains('collapsed')) {
+                if (this.classList.contains('collapsed') && slideRightEnabled) {
                     clearTimeout(hoverTimeout);
                     this.classList.add('hovered');
                     this.style.width = 'var(--sidebar-width)';
@@ -2252,7 +2367,7 @@
             });
             
             sidebar.addEventListener('mouseleave', function() {
-                if (this.classList.contains('collapsed') && isHoverExpanded) {
+                if (this.classList.contains('collapsed') && isHoverExpanded && slideRightEnabled) {
                     hoverTimeout = setTimeout(() => {
                         this.classList.remove('hovered');
                         this.style.width = 'var(--sidebar-collapsed)';
