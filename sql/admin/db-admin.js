@@ -13,16 +13,45 @@ class DatabaseAdmin {
     }
 
     setupEventListeners() {
-        document.getElementById('test-connection').addEventListener('click', () => this.testConnection());
-        document.getElementById('list-tables').addEventListener('click', () => this.listTables());
-        document.getElementById('clear-log').addEventListener('click', () => this.clearLog());
-        document.getElementById('check-users').addEventListener('click', () => this.checkTable('users'));
-        document.getElementById('check-accounts').addEventListener('click', () => this.checkTable('accounts'));
-        document.getElementById('test-query').addEventListener('click', () => this.testSimpleQuery());
+        // Only add event listeners if elements exist (allows reuse on different pages)
+        const testConnectionBtn = document.getElementById('test-connection');
+        if (testConnectionBtn) {
+            testConnectionBtn.addEventListener('click', () => this.testConnection());
+        }
+
+        const listTablesBtn = document.getElementById('list-tables');
+        if (listTablesBtn) {
+            listTablesBtn.addEventListener('click', () => this.listTables());
+        }
+
+        const clearLogBtn = document.getElementById('clear-log');
+        if (clearLogBtn) {
+            clearLogBtn.addEventListener('click', () => this.clearLog());
+        }
+
+        const checkUsersBtn = document.getElementById('check-users');
+        if (checkUsersBtn) {
+            checkUsersBtn.addEventListener('click', () => this.checkTable('users'));
+        }
+
+        const checkAccountsBtn = document.getElementById('check-accounts');
+        if (checkAccountsBtn) {
+            checkAccountsBtn.addEventListener('click', () => this.checkTable('accounts'));
+        }
+
+        const testQueryBtn = document.getElementById('test-query');
+        if (testQueryBtn) {
+            testQueryBtn.addEventListener('click', () => this.testSimpleQuery());
+        }
     }
 
     displayConfig() {
         const configDisplay = document.getElementById('config-display');
+        if (!configDisplay) {
+            // Element doesn't exist on this page, skip config display
+            return;
+        }
+        
         if (typeof CONFIG !== 'undefined' && CONFIG.DATABASE) {
             const config = CONFIG.DATABASE;
             configDisplay.innerHTML = `Server: ${config.SERVER}
@@ -279,30 +308,38 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
 
     updateConnectionStatus(status) {
         const indicator = document.getElementById('connection-status');
-        indicator.className = `status-indicator ${status}`;
+        if (indicator) {
+            indicator.className = `status-indicator ${status}`;
+        }
     }
 
     setLoading(buttonId, isLoading) {
         const button = document.getElementById(buttonId);
         const spinner = document.getElementById(`${buttonId.includes('connection') ? 'connection' : 'tables'}-spinner`);
         
-        if (isLoading) {
-            button.disabled = true;
-            if (spinner) spinner.style.display = 'inline-block';
-        } else {
-            button.disabled = false;
-            if (spinner) spinner.style.display = 'none';
+        if (button) {
+            if (isLoading) {
+                button.disabled = true;
+                if (spinner) spinner.style.display = 'inline-block';
+            } else {
+                button.disabled = false;
+                if (spinner) spinner.style.display = 'none';
+            }
         }
     }
 
     showError(message, containerId) {
         const container = document.getElementById(containerId);
-        container.innerHTML = `<div class="error-message">${message}</div>`;
+        if (container) {
+            container.innerHTML = `<div class="error-message">${message}</div>`;
+        }
     }
 
     showSuccess(message, containerId) {
         const container = document.getElementById(containerId);
-        container.innerHTML = `<div class="success-message">${message}</div>`;
+        if (container) {
+            container.innerHTML = `<div class="success-message">${message}</div>`;
+        }
     }
 
     addLog(message) {
@@ -311,52 +348,67 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
         this.log.push(logEntry);
         
         const logOutput = document.getElementById('log-output');
-        logOutput.style.display = 'block';
-        logOutput.textContent = this.log.join('\n');
-        logOutput.scrollTop = logOutput.scrollHeight;
+        if (logOutput) {
+            logOutput.style.display = 'block';
+            logOutput.textContent = this.log.join('\n');
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
     }
 
     clearLog() {
         this.log = [];
         const logOutput = document.getElementById('log-output');
-        logOutput.textContent = '';
-        logOutput.style.display = 'none';
+        if (logOutput) {
+            logOutput.textContent = '';
+            logOutput.style.display = 'none';
+        }
         
-        // Clear result containers
-        document.getElementById('connection-result').innerHTML = '';
-        document.getElementById('tables-result').innerHTML = '';
-        document.getElementById('quick-actions-result').innerHTML = '';
-        document.getElementById('tables-list').innerHTML = '';
+        // Clear result containers (only if they exist)
+        const connectionResult = document.getElementById('connection-result');
+        if (connectionResult) connectionResult.innerHTML = '';
+        
+        const tablesResult = document.getElementById('tables-result');
+        if (tablesResult) tablesResult.innerHTML = '';
+        
+        const quickActionsResult = document.getElementById('quick-actions-result');
+        if (quickActionsResult) quickActionsResult.innerHTML = '';
+        
+        const tablesList = document.getElementById('tables-list');
+        if (tablesList) tablesList.innerHTML = '';
         
         this.updateConnectionStatus('');
         this.addLog('Log cleared - ready for new tests');
     }
 
     // Enhanced displayFile function - improved version of your original
-    async displayFile(pagePath, divID, target, callback) {
+    async displayFile(pagePath, divID, target, callback, enableLogging = true) {
         // Wait for initialization if needed
         if (!this.log) {
-            setTimeout(() => this.displayFile(pagePath, divID, target, callback), 100);
+            setTimeout(() => this.displayFile(pagePath, divID, target, callback, enableLogging), 100);
             return;
         }
         
-        this.addLog(`📄 Loading file: ${pagePath}`);
+        if (enableLogging) {
+            this.addLog(`📄 Loading file: ${pagePath}`);
+        }
         
         try {
             // Load dependencies with better management
-            await this.loadDependencies();
+            await this.loadDependencies(enableLogging);
             
             // Process the file path and folder structure
             const pathInfo = this.processFilePath(pagePath);
             
             // Fetch and process the markdown file
-            const content = await this.fetchFileContent(pagePath);
-            const processedHTML = await this.processMarkdownContent(content, pathInfo);
+            const content = await this.fetchFileContent(pagePath, enableLogging);
+            const processedHTML = await this.processMarkdownContent(content, pathInfo, enableLogging);
             
             // Load content into target div
             this.loadContentIntoDiv(divID, processedHTML, target);
             
-            this.addLog(`✅ File loaded successfully: ${pagePath}`);
+            if (enableLogging) {
+                this.addLog(`✅ File loaded successfully: ${pagePath}`);
+            }
             
             // Execute callback if provided
             if (typeof callback === 'function') {
@@ -364,13 +416,15 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
             }
             
         } catch (error) {
-            this.addLog(`❌ Failed to load file: ${error.message}`);
+            if (enableLogging) {
+                this.addLog(`❌ Failed to load file: ${error.message}`);
+            }
             this.showError(`Failed to load ${pagePath}: ${error.message}`, divID);
         }
     }
 
     // Load required dependencies (showdown for markdown, d3 for data processing)
-    async loadDependencies() {
+    async loadDependencies(enableLogging = true) {
         const dependencies = [
             {
                 url: 'https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js',
@@ -381,25 +435,31 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
 
         for (const dep of dependencies) {
             if (!dep.check()) {
-                await this.loadScript(dep.url, dep.name);
+                await this.loadScript(dep.url, dep.name, enableLogging);
             }
         }
     }
 
     // Load external script with promise
-    loadScript(src, name) {
+    loadScript(src, name, enableLogging = true) {
         return new Promise((resolve, reject) => {
-            this.addLog(`📥 Loading dependency: ${name}`);
+            if (enableLogging) {
+                this.addLog(`📥 Loading dependency: ${name}`);
+            }
             
             const script = document.createElement('script');
             script.src = src;
             script.onload = () => {
-                this.addLog(`✅ Loaded dependency: ${name}`);
+                if (enableLogging) {
+                    this.addLog(`✅ Loaded dependency: ${name}`);
+                }
                 resolve();
             };
             script.onerror = () => {
                 const error = `Failed to load ${name} from ${src}`;
-                this.addLog(`❌ ${error}`);
+                if (enableLogging) {
+                    this.addLog(`❌ ${error}`);
+                }
                 reject(new Error(error));
             };
             
@@ -438,8 +498,10 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
     }
 
     // Fetch file content
-    async fetchFileContent(pagePath) {
-        this.addLog(`🔍 Fetching content from: ${pagePath}`);
+    async fetchFileContent(pagePath, enableLogging = true) {
+        if (enableLogging) {
+            this.addLog(`🔍 Fetching content from: ${pagePath}`);
+        }
         
         try {
             const response = await fetch(pagePath);
@@ -448,7 +510,9 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
             }
             
             const content = await response.text();
-            this.addLog(`📊 Content loaded: ${content.length} characters`);
+            if (enableLogging) {
+                this.addLog(`📊 Content loaded: ${content.length} characters`);
+            }
             return content;
             
         } catch (error) {
@@ -457,12 +521,14 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
     }
 
     // Process markdown content with showdown
-    async processMarkdownContent(content, pathInfo) {
+    async processMarkdownContent(content, pathInfo, enableLogging = true) {
         if (!window.showdown) {
             throw new Error('Showdown markdown processor not loaded');
         }
         
-        this.addLog(`🔄 Processing markdown content...`);
+        if (enableLogging) {
+            this.addLog(`🔄 Processing markdown content...`);
+        }
         
         // Configure showdown converter with enhanced options
         const converter = new showdown.Converter({
@@ -564,13 +630,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Global displayFile function for easy one-line usage
-function displayFile(pagePath, divID, target, callback) {
+function displayFile(pagePath, divID, target, callback, enableLogging = true) {
     // Wait for dbAdmin to be initialized
     if (window.dbAdmin) {
-        window.dbAdmin.displayFile(pagePath, divID, target, callback);
+        window.dbAdmin.displayFile(pagePath, divID, target, callback, enableLogging);
     } else {
         // Wait and try again
-        setTimeout(() => displayFile(pagePath, divID, target, callback), 100);
+        setTimeout(() => displayFile(pagePath, divID, target, callback, enableLogging), 100);
     }
 }
 

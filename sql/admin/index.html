@@ -303,7 +303,8 @@
     <script src="../../config/settings.js"></script>
     <script src="db-admin.js"></script>
     <script>
-        displayFile("README.md", "readmeDiv", "_parent");
+        // Load README without logging to keep the interface clean
+        displayFile("README.md", "readmeDiv", "_parent", null, false);
     </script>
 </body>
 </html>
