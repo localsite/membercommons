@@ -191,12 +191,6 @@
         .sidebar.collapsed:not(.hovered) .nav-link:hover {
                background: var(--accent-blue) !important;
                color: white !important;
-               /*
-               border-radius: var(--radius-md);
-               padding: 8px;
-               margin: -8px;
-               
-               */
                transition: var(--transition-smooth);
         }
         .sidebar.collapsed:not(.hovered) .subnav-link:hover {
@@ -605,28 +599,6 @@
             }
         }
 
-        /* Hover tooltips for collapsed sidebar */
-        .nav-tooltip {
-            position: absolute;
-            left: 64px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--text-primary);
-            color: white;
-            padding: 8px 12px;
-            border-radius: var(--radius-md);
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition-smooth);
-            z-index: 1001;
-        }
-
-        .sidebar.collapsed .nav-item:hover .nav-tooltip {
-            opacity: 1;
-        }
-
         /* Subnav icons in collapsed state */
         .sidebar.collapsed .subnav.expanded {
             display: flex;
@@ -736,7 +708,6 @@
                             <i class="nav-icon" data-feather="home"></i>
                             <span class="nav-text">Home</span>
                             <i class="nav-arrow" data-feather="chevron-right"></i>
-                            <div class="nav-tooltip">Home</div>
                         </button>
                         <div class="subnav">
                             <a href="#welcome" class="subnav-link active" data-tab="welcome">
@@ -761,7 +732,6 @@
                             <i class="nav-icon" data-feather="folder"></i>
                             <span class="nav-text">Projects</span>
                             <i class="nav-arrow" data-feather="chevron-right"></i>
-                            <div class="nav-tooltip">Projects</div>
                         </button>
                         <div class="subnav">
                             <a href="#opportunities" class="subnav-link" data-tab="opportunities">
@@ -786,10 +756,9 @@
                             <i class="nav-icon" data-feather="users"></i>
                             <span class="nav-text">People & Teams</span>
                             <i class="nav-arrow" data-feather="chevron-right"></i>
-                            <div class="nav-tooltip">People & Teams</div>
                         </button>
                         <div class="subnav">
-                            <a href="#people" class="subnav-link" data-tab="people">
+                            <a href="#people" class="subnav-link" data-tab="people" title="people">
                                 <i class="subnav-icon" data-feather="user"></i>
                                 <span>People</span>
                             </a>
@@ -811,7 +780,6 @@
                             <i class="nav-icon" data-feather="settings"></i>
                             <span class="nav-text">My Account</span>
                             <i class="nav-arrow" data-feather="chevron-right"></i>
-                            <div class="nav-tooltip">My Account</div>
                         </button>
                         <div class="subnav">
                             <a href="#preferences" class="subnav-link" data-tab="preferences">
@@ -957,9 +925,9 @@
                 <!-- Projects Section -->
                 <div class="section" id="projects-section">
                     <div class="tabs">
-                        <button class="tab active" data-tab="opportunities">Opportunities</button>
-                        <button class="tab" data-tab="assigned-tasks">Assigned Tasks</button>
-                        <button class="tab" data-tab="timelines">Timelines</button>
+                        <button class="tab active" data-tab="opportunities" title="Opportunities">Opportunities</button>
+                        <button class="tab" data-tab="assigned-tasks" title="Assigned Tasks">Assigned Tasks</button>
+                        <button class="tab" data-tab="timelines" title="Timelines">Timelines</button>
                     </div>
                     
                     <!-- Opportunities Tab -->
