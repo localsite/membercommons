@@ -1492,92 +1492,13 @@
                             </div>
                             <p style="color: var(--text-secondary); margin-bottom: 24px;">Rate your agreement with these policy positions to help us match you with aligned projects and collaborators.</p>
                             
-                            <div class="survey-container">
-                                <div class="survey-question active" data-question="1">
-                                    <h3 class="question-title">Government should prioritize investments in renewable energy infrastructure</h3>
-                                    <div class="rating-scale">
-                                        <button class="rating-btn" data-value="1">
-                                            <span class="rating-number">1</span>
-                                            <span class="rating-label">Strongly Disagree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="2">
-                                            <span class="rating-number">2</span>
-                                            <span class="rating-label">Disagree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="3">
-                                            <span class="rating-number">3</span>
-                                            <span class="rating-label">No Opinion</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="4">
-                                            <span class="rating-number">4</span>
-                                            <span class="rating-label">Agree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="5">
-                                            <span class="rating-number">5</span>
-                                            <span class="rating-label">Strongly Agree</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="survey-question" data-question="2">
-                                    <h3 class="question-title">Public funding should support AI research for government efficiency</h3>
-                                    <div class="rating-scale">
-                                        <button class="rating-btn" data-value="1">
-                                            <span class="rating-number">1</span>
-                                            <span class="rating-label">Strongly Disagree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="2">
-                                            <span class="rating-number">2</span>
-                                            <span class="rating-label">Disagree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="3">
-                                            <span class="rating-number">3</span>
-                                            <span class="rating-label">No Opinion</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="4">
-                                            <span class="rating-number">4</span>
-                                            <span class="rating-label">Agree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="5">
-                                            <span class="rating-number">5</span>
-                                            <span class="rating-label">Strongly Agree</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="survey-question" data-question="3">
-                                    <h3 class="question-title">Digital privacy rights should be strengthened with new legislation</h3>
-                                    <div class="rating-scale">
-                                        <button class="rating-btn" data-value="1">
-                                            <span class="rating-number">1</span>
-                                            <span class="rating-label">Strongly Disagree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="2">
-                                            <span class="rating-number">2</span>
-                                            <span class="rating-label">Disagree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="3">
-                                            <span class="rating-number">3</span>
-                                            <span class="rating-label">No Opinion</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="4">
-                                            <span class="rating-number">4</span>
-                                            <span class="rating-label">Agree</span>
-                                        </button>
-                                        <button class="rating-btn" data-value="5">
-                                            <span class="rating-number">5</span>
-                                            <span class="rating-label">Strongly Agree</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Additional survey questions will be loaded dynamically -->
+                            <div class="survey-container" id="survey-container">
+                                <!-- All survey questions will be loaded here with 5-star ratings -->
                             </div>
 
                             <div class="survey-navigation">
-                                <button class="btn btn-secondary" id="prev-question" disabled>Previous</button>
-                                <button class="btn btn-primary" id="next-question">Next Question</button>
-                                <button class="btn btn-primary" id="finish-survey" style="display: none;">Complete Survey</button>
+                                <button class="btn btn-primary" id="save-survey">Save Progress</button>
+                                <button class="btn btn-primary" id="finish-survey">Complete Survey</button>
                             </div>
 
                             <div class="survey-results" style="display: none;">
@@ -2188,6 +2109,39 @@
             }
         }
 
+        // Scroll to section utility function
+        function scrollToSection(sectionId) {
+            // List of possible section selectors to try
+            const selectors = [
+                `#${sectionId}-tab`,           // Tab content (e.g., skills-tab)
+                `#${sectionId}-section`,       // Section content (e.g., assigned-tasks-section)
+                `#${sectionId}`,              // Direct ID match
+                `.${sectionId}-section`,       // Class-based section
+                `[data-section="${sectionId}"]` // Data attribute match
+            ];
+            
+            // Try each selector until we find a matching element
+            for (const selector of selectors) {
+                const targetElement = document.querySelector(selector);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    return; // Exit once we've found and scrolled to an element
+                }
+            }
+            
+            // If no direct match, try to find any element containing the section name
+            const fallbackElement = document.querySelector(`[id*="${sectionId}"], [class*="${sectionId}"]`);
+            if (fallbackElement) {
+                fallbackElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
         // Navigation Functions
         function initializeNavigation() {
             // Handle sidebar toggle
@@ -2260,6 +2214,11 @@
                     const tab = this.getAttribute('data-tab');
                     if (tab) {
                         router.navigate(AppState.currentSection, tab);
+                        
+                        // Auto-scroll to section if it exists
+                        setTimeout(() => {
+                            scrollToSection(tab);
+                        }, 100); // Small delay to ensure tab is shown first
                     }
                 });
             });

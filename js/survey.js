@@ -6,60 +6,107 @@ class SurveyManager {
         this.responses = {};
         this.interests = {};
         this.surveyQuestions = [
+            "Government transparency should be enhanced through technology",
+            "Worker protection laws should cover gig economy participants",
+            "Public education should include mandatory digital literacy training",
             "Government should prioritize investments in renewable energy infrastructure",
             "Public funding should support AI research for government efficiency",
             "Digital privacy rights should be strengthened with new legislation",
             "Tech companies should face stricter regulation of data collection",
             "Universal basic income should be piloted in local communities",
+            "Public-private partnerships should be expanded for infrastructure",
             "Government should increase funding for public transportation",
             "Open source software should be prioritized in government systems",
             "Climate change adaptation should guide all infrastructure planning",
             "Public internet access should be treated as a basic utility",
             "Local communities should have more control over technology adoption",
-            "Government transparency should be enhanced through technology",
-            "Worker protection laws should cover gig economy participants",
-            "Public education should include mandatory digital literacy training",
             "Healthcare data should remain under strict public control",
             "Innovation districts should receive public investment incentives",
             "Environmental justice should guide technology deployment decisions",
             "Small businesses should receive priority in government contracts",
-            "Public-private partnerships should be expanded for infrastructure",
             "Digital equity should be measured and reported by local governments",
-            "Community participation should be required for smart city initiatives"
+            "Smart city initiatives should priomarily focus on open technology"
         ];
     }
 
     // Initialize survey functionality
     init() {
+        this.loadSavedResponses();
+        this.createAllQuestions();
+        this.restoreDropdownSelections();
         this.setupSurveyListeners();
         this.setupInterestsListeners();
         this.updateSurveyProgress();
     }
 
+    // Create all survey questions at once
+    createAllQuestions() {
+        const container = document.querySelector('#survey-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        this.surveyQuestions.forEach((questionText, index) => {
+            const questionNum = index + 1;
+            const questionEl = this.createQuestionDropdown(questionNum, questionText);
+            container.appendChild(questionEl);
+        });
+    }
+    
+    // Create a question with dropdown
+    createQuestionDropdown(questionNum, questionText) {
+        const questionEl = document.createElement('div');
+        questionEl.className = 'survey-question';
+        questionEl.dataset.question = questionNum;
+        
+        questionEl.innerHTML = `
+            <h3 class="question-title">${questionText}</h3>
+            <div class="rating-scale">
+                <select class="survey-dropdown" data-question="${questionNum}">
+                    <option value="">Your response...</option>
+                    <option value="1">Strongly Disagree</option>
+                    <option value="2">Disagree</option>
+                    <option value="3">No Opinion</option>
+                    <option value="4">Agree</option>
+                    <option value="5">Strongly Agree</option>
+                </select>
+            </div>
+        `;
+        
+        // Pre-select saved response if it exists
+        if (this.responses[questionNum]) {
+            const dropdown = questionEl.querySelector('.survey-dropdown');
+            dropdown.value = this.responses[questionNum];
+        }
+        
+        return questionEl;
+    }
+
     // Setup event listeners for survey
     setupSurveyListeners() {
-        // Rating button clicks
-        document.addEventListener('click', (e) => {
-            if (e.target.matches('.rating-btn') || e.target.closest('.rating-btn')) {
-                const btn = e.target.closest('.rating-btn');
-                const value = parseInt(btn.dataset.value);
-                const questionNum = parseInt(btn.closest('.survey-question').dataset.question);
+        // Dropdown change events
+        document.addEventListener('change', (e) => {
+            if (e.target.matches('.survey-dropdown')) {
+                const value = parseInt(e.target.value);
+                const questionNum = parseInt(e.target.dataset.question);
                 
-                this.selectRating(questionNum, value);
+                if (value) {
+                    this.selectRating(questionNum, value);
+                } else {
+                    // Remove response if blank option selected
+                    delete this.responses[questionNum];
+                    this.updateSurveyProgress();
+                    this.saveResponses();
+                }
             }
         });
 
         // Navigation buttons
-        const prevBtn = document.getElementById('prev-question');
-        const nextBtn = document.getElementById('next-question');
+        const saveBtn = document.getElementById('save-survey');
         const finishBtn = document.getElementById('finish-survey');
 
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => this.previousQuestion());
-        }
-        
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => this.nextQuestion());
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveResponses());
         }
         
         if (finishBtn) {
@@ -79,144 +126,16 @@ class SurveyManager {
         });
     }
 
-    // Select a rating for current question
+    // Select a rating for a question
     selectRating(questionNum, value) {
         // Store the response
         this.responses[questionNum] = value;
         
-        // Update UI
-        const question = document.querySelector(`[data-question="${questionNum}"]`);
-        if (question) {
-            // Remove previous selection
-            question.querySelectorAll('.rating-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            // Add selection to clicked button
-            const selectedBtn = question.querySelector(`[data-value="${value}"]`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('selected');
-            }
-        }
-        
-        // Enable next button if this is the current question
-        if (questionNum === this.currentQuestion) {
-            document.getElementById('next-question').disabled = false;
-        }
-        
+        // Update progress and save
         this.updateSurveyProgress();
+        this.saveResponses();
     }
 
-    // Move to next question
-    nextQuestion() {
-        if (this.currentQuestion < this.totalQuestions) {
-            this.showQuestion(this.currentQuestion + 1);
-            this.currentQuestion++;
-        }
-    }
-
-    // Move to previous question
-    previousQuestion() {
-        if (this.currentQuestion > 1) {
-            this.showQuestion(this.currentQuestion - 1);
-            this.currentQuestion--;
-        }
-    }
-
-    // Show specific question
-    showQuestion(questionNum) {
-        // Hide all questions
-        document.querySelectorAll('.survey-question').forEach(q => {
-            q.classList.remove('active');
-        });
-        
-        // Show target question
-        let questionEl = document.querySelector(`[data-question="${questionNum}"]`);
-        
-        // Create question if it doesn't exist
-        if (!questionEl && questionNum <= this.totalQuestions) {
-            questionEl = this.createQuestion(questionNum);
-        }
-        
-        if (questionEl) {
-            questionEl.classList.add('active');
-        }
-        
-        // Update navigation buttons
-        this.updateNavigation();
-    }
-
-    // Create a new question element
-    createQuestion(questionNum) {
-        const container = document.querySelector('.survey-container');
-        const questionText = this.surveyQuestions[questionNum - 1];
-        
-        const questionEl = document.createElement('div');
-        questionEl.className = 'survey-question';
-        questionEl.dataset.question = questionNum;
-        
-        questionEl.innerHTML = `
-            <h3 class="question-title">${questionText}</h3>
-            <div class="rating-scale">
-                <button class="rating-btn" data-value="1">
-                    <span class="rating-number">1</span>
-                    <span class="rating-label">Strongly Disagree</span>
-                </button>
-                <button class="rating-btn" data-value="2">
-                    <span class="rating-number">2</span>
-                    <span class="rating-label">Disagree</span>
-                </button>
-                <button class="rating-btn" data-value="3">
-                    <span class="rating-number">3</span>
-                    <span class="rating-label">No Opinion</span>
-                </button>
-                <button class="rating-btn" data-value="4">
-                    <span class="rating-number">4</span>
-                    <span class="rating-label">Agree</span>
-                </button>
-                <button class="rating-btn" data-value="5">
-                    <span class="rating-number">5</span>
-                    <span class="rating-label">Strongly Agree</span>
-                </button>
-            </div>
-        `;
-        
-        container.appendChild(questionEl);
-        
-        // Pre-select if already answered
-        if (this.responses[questionNum]) {
-            const selectedBtn = questionEl.querySelector(`[data-value="${this.responses[questionNum]}"]`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('selected');
-            }
-        }
-        
-        return questionEl;
-    }
-
-    // Update navigation button states
-    updateNavigation() {
-        const prevBtn = document.getElementById('prev-question');
-        const nextBtn = document.getElementById('next-question');
-        const finishBtn = document.getElementById('finish-survey');
-        
-        // Previous button
-        if (prevBtn) {
-            prevBtn.disabled = this.currentQuestion <= 1;
-        }
-        
-        // Next/Finish buttons
-        if (this.currentQuestion >= this.totalQuestions) {
-            if (nextBtn) nextBtn.style.display = 'none';
-            if (finishBtn) finishBtn.style.display = 'inline-flex';
-        } else {
-            if (nextBtn) {
-                nextBtn.style.display = 'inline-flex';
-                nextBtn.disabled = !this.responses[this.currentQuestion];
-            }
-            if (finishBtn) finishBtn.style.display = 'none';
-        }
-    }
 
     // Update survey progress indicator
     updateSurveyProgress() {
@@ -506,6 +425,16 @@ class SurveyManager {
         } catch (error) {
             console.log('Could not load saved responses:', error);
         }
+    }
+    
+    // Restore dropdown selections after questions are created
+    restoreDropdownSelections() {
+        Object.entries(this.responses).forEach(([questionNum, value]) => {
+            const dropdown = document.querySelector(`[data-question="${questionNum}"]`);
+            if (dropdown) {
+                dropdown.value = value;
+            }
+        });
     }
 }
 

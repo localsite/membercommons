@@ -38,13 +38,16 @@
 }
 
 .survey-question {
-    display: none;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    text-align: left;
 }
 
-.survey-question.active {
-    display: block;
-    animation: fadeInSlide 0.4s ease-out;
+.survey-question:last-child {
+    border-bottom: none;
 }
 
 @keyframes fadeInSlide {
@@ -59,64 +62,47 @@
 }
 
 .question-title {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 500;
     color: var(--text-primary);
-    margin: 0 0 32px 0;
+    margin: 0;
     line-height: 1.4;
-    margin-left: auto;
-    margin-right: auto;
+    flex: 1;
+    padding-right: 24px;
 }
 
 .rating-scale {
     display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    align-items: center;
+    min-width: 200px;
 }
 
-.rating-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 20px 16px;
+.survey-dropdown {
+    width: 200px;
+    padding: 10px 16px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
     background: var(--bg-secondary);
-    border: 2px solid var(--border-light);
-    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    font-size: 14px;
     cursor: pointer;
     transition: var(--transition-smooth);
-    min-width: 120px;
-    text-align: center;
 }
 
-.rating-btn:hover {
+.survey-dropdown:focus {
+    outline: none;
     border-color: var(--accent-green);
-    background: rgba(16, 185, 129, 0.05);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
-.rating-btn.selected {
+.survey-dropdown:hover {
     border-color: var(--accent-green);
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--accent-green);
 }
 
-.rating-number {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent-green);
-}
-
-.rating-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.rating-btn.selected .rating-label {
-    color: var(--accent-green);
+.survey-dropdown option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 8px;
 }
 
 .survey-navigation {

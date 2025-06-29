@@ -129,6 +129,7 @@
     display: grid;
     gap: 24px;
     grid-template-columns: 1fr;
+    margin-bottom: 20px;
 }
 
 .project-card {
