@@ -140,6 +140,27 @@
             overflow-y: auto;
         }
 
+        /* Custom tooltip system for narrow navigation */
+        .nav-tooltip-custom {
+            position: fixed;
+            background: var(--accent-blue);
+            color: white;
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 2000;
+            box-shadow: var(--shadow-md);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .nav-tooltip-custom.show {
+            opacity: 1;
+        }
+
         .nav-section {
             margin-bottom: 8px;
             border-bottom: 1px solid var(--border-light);
@@ -2209,6 +2230,90 @@
                     }
                 });
             }
+
+            // Setup custom tooltips for narrow navigation
+            function setupCustomTooltips() {
+                let currentTooltip = null;
+
+                // Add tooltips to nav links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    const navText = link.querySelector('.nav-text');
+                    if (!navText) return;
+
+                    link.addEventListener('mouseenter', function(e) {
+                        // Only show tooltip when sidebar is collapsed and not hovered
+                        if (sidebar.classList.contains('collapsed') && !sidebar.classList.contains('hovered')) {
+                            const rect = this.getBoundingClientRect();
+                            const tooltip = document.createElement('div');
+                            tooltip.className = 'nav-tooltip-custom';
+                            tooltip.textContent = navText.textContent;
+                            
+                            // Position to the right of the nav item
+                            tooltip.style.left = (rect.right + 10) + 'px';
+                            tooltip.style.top = (rect.top + rect.height / 2) + 'px';
+                            tooltip.style.transform = 'translateY(-50%)';
+                            
+                            document.body.appendChild(tooltip);
+                            currentTooltip = tooltip;
+                            
+                            // Show with slight delay for smooth appearance
+                            setTimeout(() => {
+                                if (tooltip.parentNode) {
+                                    tooltip.classList.add('show');
+                                }
+                            }, 50);
+                        }
+                    });
+
+                    link.addEventListener('mouseleave', function() {
+                        if (currentTooltip) {
+                            currentTooltip.remove();
+                            currentTooltip = null;
+                        }
+                    });
+                });
+
+                // Add tooltips to subnav links
+                document.querySelectorAll('.subnav-link').forEach(link => {
+                    const span = link.querySelector('span');
+                    if (!span) return;
+
+                    link.addEventListener('mouseenter', function(e) {
+                        // Only show tooltip when sidebar is collapsed and not hovered
+                        if (sidebar.classList.contains('collapsed') && !sidebar.classList.contains('hovered')) {
+                            const rect = this.getBoundingClientRect();
+                            const tooltip = document.createElement('div');
+                            tooltip.className = 'nav-tooltip-custom';
+                            tooltip.textContent = span.textContent;
+                            
+                            // Position to the right of the subnav item
+                            tooltip.style.left = (rect.right + 10) + 'px';
+                            tooltip.style.top = (rect.top + rect.height / 2) + 'px';
+                            tooltip.style.transform = 'translateY(-50%)';
+                            
+                            document.body.appendChild(tooltip);
+                            currentTooltip = tooltip;
+                            
+                            // Show with slight delay for smooth appearance
+                            setTimeout(() => {
+                                if (tooltip.parentNode) {
+                                    tooltip.classList.add('show');
+                                }
+                            }, 50);
+                        }
+                    });
+
+                    link.addEventListener('mouseleave', function() {
+                        if (currentTooltip) {
+                            currentTooltip.remove();
+                            currentTooltip = null;
+                        }
+                    });
+                });
+            }
+
+            // Initialize custom tooltips
+            setupCustomTooltips();
 
             // Handle main navigation clicks
             document.querySelectorAll('.nav-link').forEach(link => {
