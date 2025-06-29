@@ -608,6 +608,10 @@ async fn run_api_server(config: Config) -> anyhow::Result<()> {
     
     println!("Starting API server on {}:{}", state.config.server_host, state.config.server_port);
     
+    // Capture server binding info before moving state into closure
+    let server_host = state.config.server_host.clone();
+    let server_port = state.config.server_port;
+    
     HttpServer::new(move || {
         let cors = Cors::default()
             .allow_any_origin()
@@ -626,7 +630,7 @@ async fn run_api_server(config: Config) -> anyhow::Result<()> {
                     .route("/projects", web::post().to(create_project))
             )
     })
-    .bind((state.config.server_host.clone(), state.config.server_port))?
+    .bind((server_host, server_port))?
     .run()
     .await?;
     
