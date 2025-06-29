@@ -2320,7 +2320,7 @@
 
             // Handle main navigation clicks
             document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function() {
+                link.addEventListener('click', function(e) {
                     const section = this.getAttribute('data-section');
                     if (section) {
                         // Toggle subnav for clicked section (don't close others)
@@ -2330,17 +2330,29 @@
                         if (subnav && subnav.classList.contains('subnav')) {
                             const isCurrentlyExpanded = subnav.classList.contains('expanded');
                             
+                            // If clicking on arrow specifically, just toggle subnav without navigation
+                            if (e.target === arrow || arrow?.contains(e.target)) {
+                                if (isCurrentlyExpanded) {
+                                    subnav.classList.remove('expanded');
+                                    arrow?.classList.remove('expanded');
+                                } else {
+                                    subnav.classList.add('expanded');
+                                    arrow?.classList.add('expanded');
+                                }
+                                return; // Don't navigate when clicking arrow
+                            }
+                            
                             if (isCurrentlyExpanded) {
                                 // If clicking the already active section, toggle it
                                 if (this.classList.contains('active')) {
                                     subnav.classList.remove('expanded');
-                                    arrow.classList.remove('expanded');
+                                    arrow?.classList.remove('expanded');
                                     return; // Don't navigate if we're just closing
                                 }
                             } else {
                                 // Expand this subnav
                                 subnav.classList.add('expanded');
-                                arrow.classList.add('expanded');
+                                arrow?.classList.add('expanded');
                             }
                         }
                         

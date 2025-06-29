@@ -67,6 +67,11 @@ class ProjectsManager {
         }
     }
 
+    // Load opportunities (alias for loadProjects for compatibility)
+    async loadOpportunities() {
+        return this.loadProjects();
+    }
+
     // Load placeholder data for demo purposes
     loadPlaceholderData() {
         this.projects = [
@@ -216,7 +221,9 @@ class ProjectsManager {
         `;
 
         // Re-initialize Feather icons
-        feather.replace();
+         if (window.initializeFeatherIcons) {
+            window.initializeFeatherIcons();
+        }
     }
 
     // Render individual project card
@@ -467,7 +474,9 @@ class ProjectsManager {
             }
         });
 
-        feather.replace();
+        if (window.initializeFeatherIcons) {
+            window.initializeFeatherIcons();
+        }
         return modal;
     }
 
@@ -611,7 +620,9 @@ class ProjectsManager {
         const searchContainer = document.getElementById('project-search').parentElement;
         searchContainer.appendChild(suggestionsEl);
 
-        feather.replace();
+        if (window.initializeFeatherIcons) {
+            window.initializeFeatherIcons();
+        }
     }
 
     // Generate smart suggestions based on query
@@ -647,43 +658,27 @@ class ProjectsManager {
         this.renderProjects();
     }
 
-    // Show notification
+    // Show notification (using common utility)
     showNotification(message, type = 'info') {
-        // Remove existing notifications
-        const existing = document.querySelector('.notification');
-        if (existing) existing.remove();
-
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <div class="notification-content">
-                <i data-feather="${type === 'success' ? 'check-circle' : 'info'}"></i>
-                <span>${message}</span>
-            </div>
-            <button class="notification-close" onclick="this.parentElement.remove()">
-                <i data-feather="x"></i>
-            </button>
-        `;
-
-        document.body.appendChild(notification);
-        feather.replace();
-
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
-            }
-        }, 5000);
+        if (window.showNotification) {
+            window.showNotification(message, type);
+        } else {
+            console.log(`Notification: ${message}`);
+        }
     }
 
-    // Format date for display
+    // Format date for display (using common utility)
     formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-        });
+        if (window.formatDate) {
+            return window.formatDate(dateString);
+        } else {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
     }
 
     // View project details
@@ -775,7 +770,9 @@ class ProjectsManager {
             </div>
         `;
 
-        feather.replace();
+        if (window.initializeFeatherIcons) {
+            window.initializeFeatherIcons();
+        }
         return modal;
     }
 }

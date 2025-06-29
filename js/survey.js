@@ -535,7 +535,9 @@ class SkillsManager {
             modal.remove();
         });
         
-        feather.replace();
+        if (window.initializeFeatherIcons) {
+            window.initializeFeatherIcons();
+        }
     }
 
     // Add new skill

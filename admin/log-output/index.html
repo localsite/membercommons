@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Log Output - MemberCommons</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.css">
+    
+    <!-- Shared Navigation Styles -->
+    <script src="../../js/common.js"></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
     <link rel="stylesheet" href="../../sql/admin/shared-styles.css">
     <style>
         :root {
@@ -36,7 +42,6 @@
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
-            padding: 20px;
         }
 
         .container {
@@ -46,7 +51,6 @@
 
         .header {
             background: var(--bg-secondary);
-            padding: 24px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
             margin-bottom: 24px;
@@ -123,42 +127,97 @@
             gap: 12px;
             margin-bottom: 16px;
         }
+        /* Override main content margin for this specialized page */
+        .main-content {
+            margin-left: var(--sidebar-width);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 Admin Log Output</h1>
-            <p>Real-time logging demonstration of the enhanced displayFile() function</p>
-        </div>
-
-        <div class="card">
-            <h2 class="card-title">🔧 File Loading Monitor</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 16px;">
-                This interface shows detailed logging of the README.md loading process, including dependency management, 
-                file fetching, markdown processing, and content rendering.
-            </p>
-            
-            <div class="actions">
-                <button class="btn btn-secondary" id="reload-readme">🔄 Reload README</button>
-                <button class="btn btn-secondary" id="clear-log">🗑 Clear Log</button>
+    <!-- Navigation will be injected here by navigation.js -->
+    
+    <!-- Page content in the main content area -->
+    <div id="admin-log-content" class="page-content active">
+        <div class="container">
+            <div class="header">
+                <h1>📊 Admin Log Output</h1>
+                <p>Real-time logging demonstration of the enhanced displayFile() function</p>
             </div>
-            
-            <div id="log-output" class="log-output"></div>
-        </div>
 
-        <div id="readmeDiv" class="card readme-content">
-            <p style="color: var(--text-secondary); font-style: italic;">
-                Loading README.md with full logging enabled...
-            </p>
+            <div class="card">
+                <h2 class="card-title">🔧 File Loading Monitor</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    This interface shows detailed logging of the README.md loading process, including dependency management, 
+                    file fetching, markdown processing, and content rendering.
+                </p>
+                
+                <div class="actions">
+                    <button class="btn btn-secondary" id="reload-readme">🔄 Reload README</button>
+                    <button class="btn btn-secondary" id="clear-log">🗑 Clear Log</button>
+                </div>
+                
+                <div id="log-output" class="log-output"></div>
+            </div>
+
+            <div id="readmeDiv" class="card readme-content">
+                <p style="color: var(--text-secondary); font-style: italic;">
+                    Loading README.md with full logging enabled...
+                </p>
+            </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/feather.min.js"></script>
+    <script src="../../js/navigation.js"></script>
     <script src="../../config/settings.js"></script>
     <script src="../../sql/admin/db-admin.js"></script>
     <script>
-        // Wait for DOM and dbAdmin to be ready
+        // Application State for this page
+        const AppState = {
+            currentUser: null,
+            currentSection: 'admin',
+            currentTab: 'log-output',
+            isAuthenticated: false,
+            navigation: null
+        };
+
+        // Wait for DOM and initialize everything
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize shared navigation
+            setTimeout(() => {
+                AppState.navigation = initializeNavigation({
+                    defaultSection: 'admin',
+                    defaultTab: 'log-output',
+                    onSectionChange: (section, tab) => {
+                        console.log('Section changed to:', section, tab);
+                    },
+                    onTabChange: (tab, section) => {
+                        console.log('Tab changed to:', tab, section);
+                    },
+                    onSidebarToggle: (collapsed) => {
+                        console.log('Sidebar toggled:', collapsed ? 'collapsed' : 'expanded');
+                    }
+                });
+
+                // Move the admin content into the navigation structure
+                const adminContent = document.getElementById('admin-log-content');
+                const tabContent = document.getElementById('tab-content');
+                if (tabContent && adminContent) {
+                    tabContent.appendChild(adminContent);
+                    adminContent.classList.add('active');
+                }
+
+                // Initialize feather icons
+                if (window.feather) {
+                    feather.replace();
+                }
+            }, 100);
+
             // Wait for dbAdmin to initialize
             function initializeLogOutput() {
                 if (!window.dbAdmin) {
@@ -205,7 +264,7 @@
                 displayFile("README.md", "readmeDiv", "_parent");
             }
 
-            // Start initialization
+            // Start log output initialization
             initializeLogOutput();
         });
     </script>
