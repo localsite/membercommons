@@ -25,8 +25,7 @@ class DatabaseAdmin {
         const configDisplay = document.getElementById('config-display');
         if (typeof CONFIG !== 'undefined' && CONFIG.DATABASE) {
             const config = CONFIG.DATABASE;
-            configDisplay.innerHTML = `
-Server: ${config.SERVER}
+            configDisplay.innerHTML = `Server: ${config.SERVER}
 Database: ${config.DATABASE}
 Username: ${config.USERNAME}
 Port: ${config.PORT}

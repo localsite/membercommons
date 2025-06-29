@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Database Admin - MemberCommons</title>
+    <link rel="stylesheet" href="shared-styles.css">
     <style>
         :root {
             --bg-primary: #F9FAFB;
@@ -168,6 +169,7 @@
             font-size: 13px;
             color: var(--text-secondary);
             margin: 16px 0;
+            white-space: pre-line;
         }
 
         .table-list {
@@ -288,112 +290,13 @@
             <div id="quick-actions-result"></div>
         </div>
 
-        <div class="card">
-            <h2 class="card-title">📖 Documentation</h2>
-            <div id="readmeDiv" class="documentation-panel">
-                <p style="color: var(--text-secondary); font-style: italic;">
-                    Loading README.md documentation...
-                </p>
-            </div>
+        <div id="readmeDiv" class="card readme-content">
+            <p style="color: var(--text-secondary); font-style: italic;">
+                Loading README.md documentation...
+            </p>
         </div>
     </div>
 
-    <style>
-        .documentation-panel {
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            margin-top: 16px;
-        }
-
-        .documentation-panel h1,
-        .documentation-panel h2,
-        .documentation-panel h3,
-        .documentation-panel h4 {
-            color: var(--text-primary);
-            margin-top: 24px;
-            margin-bottom: 12px;
-        }
-
-        .documentation-panel h1 {
-            font-size: 24px;
-            border-bottom: 2px solid var(--border-light);
-            padding-bottom: 8px;
-        }
-
-        .documentation-panel h2 {
-            font-size: 20px;
-        }
-
-        .documentation-panel h3 {
-            font-size: 18px;
-        }
-
-        .documentation-panel p {
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-
-        .documentation-panel ul,
-        .documentation-panel ol {
-            margin-left: 20px;
-            margin-bottom: 12px;
-        }
-
-        .documentation-panel li {
-            margin-bottom: 4px;
-        }
-
-        .documentation-panel code {
-            background-color: #eee;
-            padding: 2px 5px;
-            overflow: scroll;
-        }
-
-        .documentation-panel pre {
-            line-height: 1.25em;
-        }
-
-        .documentation-panel pre code {
-            background-color: #eee;
-            padding: 15px;
-            border-left: 4px solid #137AD1;
-            margin-bottom: 22px;
-            display: block;
-            unicode-bidi: embed;
-            font-family: monospace;
-        }
-
-        .documentation-panel blockquote {
-            border-left: 4px solid var(--accent-blue);
-            padding-left: 16px;
-            margin: 16px 0;
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-
-        .documentation-panel table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 16px 0;
-        }
-
-        .documentation-panel th,
-        .documentation-panel td {
-            border: 1px solid var(--border-light);
-            padding: 8px 12px;
-            text-align: left;
-        }
-
-        .documentation-panel th {
-            background: var(--bg-secondary);
-            font-weight: 600;
-        }
-
-        .edit-link {
-            margin-bottom: 16px;
-        }
-    </style>
 
     <script src="../../config/settings.js"></script>
     <script src="db-admin.js"></script>

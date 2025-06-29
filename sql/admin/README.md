@@ -1,4 +1,4 @@
-# Database Admin Panel
+# 📖 Database Admin Panel
 
 A web-based interface to test PostgreSQL database connections and explore the SuiteCRM schema.
 
