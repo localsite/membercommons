@@ -49,14 +49,7 @@ chrono = { version = "0.4", features = ["serde"] }
 # gemini_client_rust = "0.1"
 
 # HTTP Client for Gemini API
-reqwest = { version = "0.12", features = ["json", "rustls-tls"] }[package]
-name = "gemini_crm"
-version = "0.1.0"
-edition = "2021"
-authors = ["Your Name <your.email@example.com>"]
-description = "AI-Powered CRM with Gemini Integration"
-license = "MIT"
-repository = "https://github.com/yourusername/gemini_crm"
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
 keywords = ["crm", "ai", "gemini", "cli", "web"]
 categories = ["command-line-utilities", "web-programming"]
 
