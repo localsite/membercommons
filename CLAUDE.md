@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `cargo test` - Run tests
 
 ### Development Mode
-- `cargo run -- serve` starts server on localhost:8080 by default
+- `cargo run -- serve` starts server on localhost:8081 by default
 - Server host/port configurable via `SERVER_HOST`/`SERVER_PORT` environment variables
 
 ## Project Vision & Requirements
@@ -106,7 +106,7 @@ Complete CRM schema based on SuiteCRM/Salesforce structure:
    DATABASE_URL=postgresql://sqladmin@model-earth-server.database.windows.net/ModelEarthDB
    GEMINI_API_KEY=your_key_here
    SERVER_HOST=127.0.0.1
-   SERVER_PORT=8080
+   SERVER_PORT=8081
    ```
 
 2. **Fallback Handling**: When database connection fails, populate with informative placeholders rather than errors
@@ -115,7 +115,7 @@ Complete CRM schema based on SuiteCRM/Salesforce structure:
 
 ### Frontend Setup Requirements
 ```javascript
-const API_BASE = 'http://localhost:8080/api'; // Backend URL
+const API_BASE = 'http://localhost:8081/api'; // Backend URL
 ```
 
 ### Navigation Structure

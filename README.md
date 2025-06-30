@@ -119,13 +119,16 @@ MemberCommons/
    export DATABASE_URL="postgresql://sqladmin@model-earth-server.database.windows.net/ModelEarthDB"
    export GEMINI_API_KEY="your-gemini-api-key"
    export SERVER_HOST="127.0.0.1"
-   export SERVER_PORT="8080"
+   export SERVER_PORT="8081"
    ```
 
 5. **Initialize database schema**
    ```bash
    cargo run -- init-db
    ```
+Or 
+
+      SERVER_PORT=8081 cargo run -- serve
 
 6. **Start the backend server**
    ```bash
@@ -156,7 +159,7 @@ MemberCommons/
 ### API Configuration
 Update the API base URL in your frontend:
 ```javascript
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = 'http://localhost:8081/api';
 ```
 
 ### Database Configuration

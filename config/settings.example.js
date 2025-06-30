@@ -4,7 +4,7 @@
 
 /*
 provides frontend configuration including:
-    - API Base URL (CONFIG.API.BASE_URL: 'http://localhost:8080/api')
+    - API Base URL (CONFIG.API.BASE_URL: 'http://localhost:8081/api')
     - OAuth provider settings (Google, GitHub, LinkedIn)
     - Gemini AI configuration
     - Feature flags and UI settings
@@ -14,7 +14,7 @@ provides frontend configuration including:
 const CONFIG = {
     // API Configuration
     API: {
-        BASE_URL: 'http://localhost:8080/api',
+        BASE_URL: 'http://localhost:8081/api',
         TIMEOUT: 10000, // 10 seconds
     },
 

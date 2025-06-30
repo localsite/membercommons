@@ -1,7 +1,7 @@
 // Common utilities and shared functions for MemberCommons
 
 // API Configuration
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = 'http://localhost:8081/api';
 
 // API utility function
 async function apiCall(endpoint, method = 'GET', data = null) {
