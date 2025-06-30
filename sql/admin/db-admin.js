@@ -57,38 +57,9 @@ class DatabaseAdmin {
         
         if (typeof CONFIG !== 'undefined' && CONFIG.DATABASE) {
             const config = CONFIG.DATABASE;
-            configDisplay.innerHTML = `
-                <div class="config-item">
-                    <strong>Server:</strong> ${config.SERVER}
-                </div>
-                <div class="config-item">
-                    <strong>Database:</strong> ${config.DATABASE}
-                </div>
-                <div class="config-item">
-                    <strong>Username:</strong> ${config.USERNAME}
-                </div>
-                <div class="config-item">
-                    <strong>Port:</strong> ${config.PORT}
-                </div>
-                <div class="config-item">
-                    <strong>SSL:</strong> ${config.SSL ? 'Enabled' : 'Disabled'}
-                </div>
-                <div class="config-item">
-                    <strong>Connection:</strong> ${config.CONNECTION_INFO}
-                </div>
-                <div class="config-item">
-                    <strong>API Endpoint:</strong> ${this.apiBaseUrl}
-                </div>
-            `;
+            configDisplay.innerHTML = `<div class="config-item"><strong>Server:</strong> ${config.SERVER}</div><div class="config-item"><strong>Database:</strong> ${config.DATABASE}</div><div class="config-item"><strong>Username:</strong> ${config.USERNAME}</div><div class="config-item"><strong>Port:</strong> ${config.PORT}</div><div class="config-item"><strong>SSL:</strong> ${config.SSL ? 'Enabled' : 'Disabled'}</div><div class="config-item"><strong>Connection:</strong> ${config.CONNECTION_INFO}</div><div class="config-item"><strong>API Endpoint:</strong> ${this.apiBaseUrl}</div>`;
         } else {
-            configDisplay.innerHTML = `
-                <div class="config-error">
-                    <strong>⚠️ Configuration not loaded</strong><br>
-                    Make sure settings.js is properly included and accessible.
-                    <br><br>
-                    <strong>Fallback API URL:</strong> ${this.apiBaseUrl}
-                </div>
-            `;
+            configDisplay.innerHTML = `<div class="config-error"><strong>⚠️ Configuration not loaded</strong><br>Make sure settings.js is properly included and accessible.<br><br><strong>Fallback API URL:</strong> ${this.apiBaseUrl}</div>`;
         }
     }
 
