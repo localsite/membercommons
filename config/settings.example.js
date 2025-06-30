@@ -1,22 +1,21 @@
 // Configuration file for MemberCommons
 // Copy this file to settings.js and update with your actual values
+// Database and Gemini Config are in .env
+
+/*
+provides frontend configuration including:
+    - API Base URL (CONFIG.API.BASE_URL: 'http://localhost:8080/api')
+    - OAuth provider settings (Google, GitHub, LinkedIn)
+    - Gemini AI configuration
+    - Feature flags and UI settings
+    - Error messages and validation rules
+*/
 
 const CONFIG = {
     // API Configuration
     API: {
         BASE_URL: 'http://localhost:8080/api',
         TIMEOUT: 10000, // 10 seconds
-    },
-
-    // Database Configuration (for reference - actual config should be in Rust)
-    DATABASE: {
-        // Azure/Google compatible PostgreSQL settings
-        SERVER: 'model-earth-server.database.windows.net',
-        DATABASE: 'ModelEarthDB',
-        USERNAME: 'sqladmin',
-        PASSWORD: '', // Leave empty for demo mode
-        PORT: 5432,
-        SSL: true
     },
 
     // Authentication Configuration

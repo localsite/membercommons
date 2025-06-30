@@ -6,53 +6,37 @@ A web-based interface to test PostgreSQL database connections and explore the Su
 
 - `index.html` - Main admin interface
 - `db-admin.js` - Frontend JavaScript for database operations
-- `rust_db_endpoints.rs` - Backend Rust endpoints (to be integrated)
+- `rust_db_endpoints.rs` - Backend Rust endpoints (✅ **Already integrated in main.rs**)
 - `README.md` - This documentation
 
 ## Setup
 
-### 1. Configure Database Settings
+### 1. Database Configuration ✅ **Already Configured**
 
-Make sure your `config/settings.js` file has the correct Azure PostgreSQL credentials:
+The database configuration is already set up in the Rust backend (`src/main.rs`) with support for:
+- Environment variables (`.env` file)
+- Configuration file (`config.toml`)
+- Default PostgreSQL connection settings
 
-```javascript
-DATABASE: {
-    SERVER: 'model-earth-server.database.windows.net',
-    DATABASE: 'ModelEarthDB',
-    USERNAME: 'sqladmin',
-    PASSWORD: 'your-actual-password',
-    PORT: 5432,
-    SSL: true
-}
+The backend automatically loads database credentials from:
+- `DATABASE_URL` environment variable
+- Or falls back to: `postgres://user:password@localhost/suitecrm`
+
+### 2. Backend Server ✅ **Already Implemented**
+
+All database admin endpoints have been integrated into the main Rust backend:
+
+- ✅ Database admin endpoints are implemented in `src/main.rs`
+- ✅ All required dependencies are present in `Cargo.toml`
+- ✅ Routes are configured and ready to use
+- ✅ Security restrictions (SELECT-only queries) are enforced
+
+**Start the server:**
+```bash
+cargo run -- serve
 ```
 
-### 2. Start Backend Server
-
-Add the database admin endpoints to your Rust backend:
-
-1. Copy the code from `rust_db_endpoints.rs` into your main.rs or a separate module
-2. Add the dependencies to Cargo.toml if not already present:
-   ```toml
-   [dependencies]
-   actix-web = "4"
-   sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid"] }
-   serde = { version = "1.0", features = ["derive"] }
-   serde_json = "1.0"
-   chrono = { version = "0.4", features = ["serde"] }
-   ```
-
-3. Configure the routes in your main function:
-   ```rust
-   App::new()
-       .app_data(web::Data::new(pool.clone()))
-       .configure(configure_db_admin_routes)
-       // ... other configurations
-   ```
-
-4. Start the server:
-   ```bash
-   cargo run -- serve
-   ```
+The server will start on `http://127.0.0.1:8081` by default.
 
 ### 3. Access Admin Panel
 
@@ -90,17 +74,18 @@ Add the database admin endpoints to your Rust backend:
 - Error details and debugging info
 - Clear log functionality
 
-## API Endpoints
+## API Endpoints ✅ **All Implemented**
 
-The admin panel expects these backend endpoints:
+The following backend endpoints are available and working:
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/db/test-connection` | GET | Test database connection |
-| `/api/db/tables` | GET | List database tables |
-| `/api/db/table/{name}` | GET | Get table information |
-| `/api/db/query` | POST | Execute SELECT query |
-| `/api/health` | GET | Health check |
+| Endpoint | Method | Description | Status |
+|----------|--------|-------------|---------|
+| `/api/db/test-connection` | GET | Test database connection | ✅ Active |
+| `/api/db/tables` | GET | List database tables | ✅ Active |
+| `/api/db/table/{name}` | GET | Get table information | ✅ Active |
+| `/api/db/query` | POST | Execute SELECT query | ✅ Active |
+| `/api/health` | GET | Health check | ✅ Active |
+| `/health` | GET | Health check (root level) | ✅ Active |
 
 ## Response Format
 
@@ -130,13 +115,12 @@ All endpoints return JSON in this format:
 ### Common Issues
 
 **Connection Refused**
-- Check if Rust backend is running on port 8080
+- Check if Rust backend is running on port 8081
 - Verify `cargo run -- serve` is active
 
 **Database Connection Failed**
-- Verify Azure PostgreSQL credentials in settings.js
+- Verify Azure PostgreSQL credentials in .env
 - Check Azure firewall rules allow your IP address
-- Confirm SSL settings are correct
 
 **Tables Not Loading**
 - Ensure database schema is properly initialized

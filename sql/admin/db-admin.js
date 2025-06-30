@@ -1,7 +1,10 @@
 // Database Admin Panel JavaScript
 class DatabaseAdmin {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:8080/api';
+        // Use config from settings.js if available, otherwise fallback
+        this.apiBaseUrl = (typeof CONFIG !== 'undefined' && CONFIG.API) 
+            ? CONFIG.API.BASE_URL 
+            : 'http://localhost:8081/api';
         this.log = [];
         this.init();
     }
@@ -54,16 +57,38 @@ class DatabaseAdmin {
         
         if (typeof CONFIG !== 'undefined' && CONFIG.DATABASE) {
             const config = CONFIG.DATABASE;
-            configDisplay.innerHTML = `Server: ${config.SERVER}
-Database: ${config.DATABASE}
-Username: ${config.USERNAME}
-Port: ${config.PORT}
-SSL: ${config.SSL}
-Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
+            configDisplay.innerHTML = `
+                <div class="config-item">
+                    <strong>Server:</strong> ${config.SERVER}
+                </div>
+                <div class="config-item">
+                    <strong>Database:</strong> ${config.DATABASE}
+                </div>
+                <div class="config-item">
+                    <strong>Username:</strong> ${config.USERNAME}
+                </div>
+                <div class="config-item">
+                    <strong>Port:</strong> ${config.PORT}
+                </div>
+                <div class="config-item">
+                    <strong>SSL:</strong> ${config.SSL ? 'Enabled' : 'Disabled'}
+                </div>
+                <div class="config-item">
+                    <strong>Connection:</strong> ${config.CONNECTION_INFO}
+                </div>
+                <div class="config-item">
+                    <strong>API Endpoint:</strong> ${this.apiBaseUrl}
+                </div>
             `;
         } else {
-            configDisplay.innerHTML = 'Configuration not found. Make sure settings.js is loaded.';
-            this.showError('Configuration not loaded', 'config-display');
+            configDisplay.innerHTML = `
+                <div class="config-error">
+                    <strong>⚠️ Configuration not loaded</strong><br>
+                    Make sure settings.js is properly included and accessible.
+                    <br><br>
+                    <strong>Fallback API URL:</strong> ${this.apiBaseUrl}
+                </div>
+            `;
         }
     }
 
@@ -136,7 +161,7 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
                 }
             }
             
-            throw new Error('All backend endpoints failed. Make sure the Rust server is running on port 8080.');
+            throw new Error('All backend endpoints failed. Make sure the Rust server is running on port 8081.');
             
         } catch (error) {
             this.addLog(`❌ Direct connection test failed: ${error.message}`);
@@ -150,7 +175,7 @@ Password: ${config.PASSWORD ? '[SET]' : '[NOT SET]'}
     <h4>Connection Troubleshooting:</h4>
     <ol style="margin: 8px 0 0 20px; color: var(--text-secondary);">
         <li>Make sure the Rust backend server is running: <code>cargo run -- serve</code></li>
-        <li>Verify the server is listening on port 8080</li>
+        <li>Verify the server is listening on port 8081</li>
         <li>Check that your Azure PostgreSQL credentials are correct</li>
         <li>Ensure your IP is allowed in Azure PostgreSQL firewall rules</li>
         <li>Verify SSL certificate settings for Azure connection</li>
